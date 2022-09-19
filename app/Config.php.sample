@@ -9,9 +9,8 @@
     define('DB_NAME', '');
     define('DB_PORT', '');
 
-    // APPROOT
     define('APPROOT', dirname(dirname(__FILE__)));
-
-    // URLROOT (Dynamic links)
     define('URLROOT', 'http://localhost/projects/rocnikova-prace/app');
+    // define('ASSETSROOT', 'http://localhost/projects/rocnikova-prace/app/public/static'); // PRODUCTION
+    define('ASSETSROOT', 'http://localhost:3000'); // DEVELOPMENT
 ?>

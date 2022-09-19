@@ -11,6 +11,4 @@
     define('URLROOT', 'http://localhost/projects/rocnikova-prace/app');
     // define('ASSETSROOT', 'http://localhost/projects/rocnikova-prace/app/public/static'); // PRODUCTION
     define('ASSETSROOT', 'http://localhost:3000'); // DEVELOPMENT
-
-    // define('STATIC_ASSETS_PATH', 'http://localhost:3000/');
 ?>
