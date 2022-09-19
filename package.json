@@ -1,0 +1,37 @@
+{
+  "name": "rocnikova-prace",
+  "version": "1.0.0",
+  "description": "Projekt pro moji ročníkovou práci.",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.prod.js --mode production",
+    "dev": "webpack serve --config webpack.dev.js --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jirkasa/rocnikova-prace.git"
+  },
+  "author": "Jiří Satora",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jirkasa/rocnikova-prace/issues"
+  },
+  "homepage": "https://github.com/Jirkasa/rocnikova-prace#readme",
+  "devDependencies": {
+    "@babel/core": "^7.19.1",
+    "@babel/preset-env": "^7.19.1",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^4.1.0",
+    "less-loader": "^11.0.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "postcss-loader": "^7.0.1",
+    "postcss-preset-env": "^7.8.2",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1",
+    "webpack-merge": "^5.8.0",
+    "webpack-remove-empty-scripts": "^1.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+<?php
+    # set configuration values, remove this comment and rename this file to Config.php
+
+    define('SITENAME', 'Some name');
+
+    define('DB_HOST', '');
+    define('DB_USER', '');
+    define('DB_PASS', '');
+    define('DB_NAME', '');
+    define('DB_PORT', '');
+
+    // APPROOT
+    define('APPROOT', dirname(dirname(__FILE__)));
+
+    // URLROOT (Dynamic links)
+    define('URLROOT', 'http://localhost/projects/rocnikova-prace/app');
+?>
