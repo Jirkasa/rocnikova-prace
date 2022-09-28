@@ -1,3 +1,4 @@
 node_modules/
 app/Config.php
 app/public/static/
+docs/
