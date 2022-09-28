@@ -33,5 +33,9 @@
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0",
     "webpack-remove-empty-scripts": "^1.0.0"
+  },
+  "dependencies": {
+    "mainloop.js": "^1.0.4",
+    "three": "^0.144.0"
   }
 }

@@ -1,0 +1,27 @@
+.header {
+    background-color: @colors[primary-dark];
+    height: @header-height;
+
+    padding: 0 3.2rem;
+
+    &__content {
+        height: 100%;
+        max-width: @grid-width;
+        margin: 0 auto;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title {
+        &:link, &:visited {
+            font-size: 3.2rem;
+            line-height: 1;
+
+            color: @colors[white];
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+    }
+}

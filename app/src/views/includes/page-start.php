@@ -22,6 +22,6 @@
         <header class="header">
             <div class="header__content">
                 <a href="<?php echo URLROOT; ?>" class="header__title"><?php echo SITENAME; ?></a>
+                <div></div>
             </div>
         </header>
-    </div>
