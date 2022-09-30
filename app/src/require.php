@@ -1,6 +1,6 @@
 <?php
     // config
-    require_once '../config.php';
+    require_once '../Config.php';
 
     // libraries
     require_once 'libraries/Controller.php';
