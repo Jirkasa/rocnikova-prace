@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 /**
  * Configuration of game.
  * @prop {number} TILE_SIZE Size of one tile.
@@ -5,13 +7,18 @@
  * @prop {number} NUMBER_OF_TILES Number of tiles from left to right.
  * @prop {number} NUMBER_OF_VISIBLE_LANES Number of lanes that are visible in scene at a time.
  * @prop {number} MAX_LANE_POSITION Maximum position of lane until it is removed.
+ * @prop {number} CAMERA_START_POSITION Start position of camera.
+ * @prop {number} CHICKEN_SPEED Speed of chicken in miliseconds (moving, rotation and jumping).
  */
 const Config = {
     TILE_SIZE: 1.3,
     SIDE_GROUND_SIZE: 60,
     NUMBER_OF_TILES: 9,
     NUMBER_OF_VISIBLE_LANES: 50,
-    MAX_LANE_POSITION: 20
+    MAX_LANE_POSITION: 20,
+    CAMERA_START_POSITION: new THREE.Vector3(4, 8, 9),
+    CHICKEN_JUMP_HEIGHT: 0.5,
+    CHICKEN_SPEED: 150
 }
 
 export default Config;

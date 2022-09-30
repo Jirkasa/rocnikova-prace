@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import Config from '../Config';
+import ChickenJumpControl from './ChickenJumpControl';
+import PositionChanger from './PositionChanger';
+import RotationChanger from './RotationChanger';
 
 /** Represents chicken (which is controlled by player in game). */
 class Chicken {
@@ -21,11 +24,18 @@ class Chicken {
         gameController.onMoveRight.subscribe(() => this._onControllerMoveRight());
         gameController.onMoveForward.subscribe(() => this._onControllerMoveForward());
         gameController.onMoveBack.subscribe(() => this._onControllerMoveBack());
+
+        // changers to smoothly set position and rotation of chicken
+        this._xPosChanger = new PositionChanger(this.mesh, "x", Config.CHICKEN_SPEED);
+        this._zPosChanger = new PositionChanger(this.mesh, "z", Config.CHICKEN_SPEED);
+        this._rotationChanger = new RotationChanger(this.mesh, "y", Config.CHICKEN_SPEED);
+
+        this._chickenJumpControl = new ChickenJumpControl(this, Config.CHICKEN_SPEED);
     }
 
     /**
      * Updates position of chicken. (This method is used to synchronize movement of lanes with chicken.)
-     * @param {number} amount Disntance to update position of chicken by.
+     * @param {number} amount Distance to update position of chicken by.
      */
     updatePosition(amount) {
         this.mesh.position.z += amount;
@@ -36,27 +46,38 @@ class Chicken {
      * @param {number} dt Delta time.
      */
     update(dt) {
-
+        this._xPosChanger.update(dt);
+        this._zPosChanger.update(dt);
+        this._rotationChanger.update(dt);
+        this._chickenJumpControl.update(dt);
     }
 
     // called when signal to move left is sent from GameController
     _onControllerMoveLeft() {
-        this.mesh.position.x -= Config.TILE_SIZE;
+        this._xPosChanger.addPosition(-Config.TILE_SIZE);
+        this._rotationChanger.setRotation(-Math.PI/2);
+        this._chickenJumpControl.jump();
     }
 
     // called when signal to move right is sent from GameController
     _onControllerMoveRight() {
-        this.mesh.position.x += Config.TILE_SIZE;
+        this._xPosChanger.addPosition(Config.TILE_SIZE);
+        this._rotationChanger.setRotation(Math.PI/2);
+        this._chickenJumpControl.jump();
     }
 
     // called when signal to move forward is sent from GameController
     _onControllerMoveForward() {
-        this.mesh.position.z -= Config.TILE_SIZE;
+        this._zPosChanger.addPosition(-Config.TILE_SIZE);
+        this._rotationChanger.setRotation(Math.PI);
+        this._chickenJumpControl.jump();
     }
 
     // called when signal to move back is sent from GameController
     _onControllerMoveBack() {
-        this.mesh.position.z += Config.TILE_SIZE;
+        this._zPosChanger.addPosition(Config.TILE_SIZE);
+        this._rotationChanger.setRotation(0);
+        this._chickenJumpControl.jump();
     }
 }
 

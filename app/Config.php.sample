@@ -1,7 +1,7 @@
 <?php
     # set configuration values, remove this comment and rename this file to Config.php
 
-    define('SITENAME', 'Some name');
+    define('SITENAME', 'Ročníková práce');
 
     define('DB_HOST', '');
     define('DB_USER', '');

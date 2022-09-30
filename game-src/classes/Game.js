@@ -6,8 +6,9 @@ import World from './World';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Lanes from './Lanes';
 import * as dat from 'dat.gui';
+import ChickenCamera from './ChickenCamera';
 
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 
 /** The main class for game. */
 class Game {
@@ -33,17 +34,19 @@ class Game {
         ]);
         this._gameController = gameController;
         this._lanes = null;
-        this._camera = new THREE.PerspectiveCamera(40, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight, 0.1, 500); // TODO - potom to změnit
-        this._camera.position.x = 4;
-        this._camera.position.y = 8;
-        this._camera.position.z = 9;
-        this._camera.lookAt(0, 0.7, 0);
 
-        gui.add(this._camera.position, "x").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
-        gui.add(this._camera.position, "y").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
-        gui.add(this._camera.position, "z").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
+        // this._camera = new THREE.PerspectiveCamera(40, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight, 0.1, 500); // TODO - potom to změnit
+        // this._camera.position.x = 4;
+        // this._camera.position.y = 8;
+        // this._camera.position.z = 9;
+        // this._camera.lookAt(0, 0.7, 0);
+
+        // gui.add(this._camera.position, "x").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
+        // gui.add(this._camera.position, "y").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
+        // gui.add(this._camera.position, "z").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
 
         this._chicken = null;
+        this._chickenCamera = null;
 
         window.addEventListener("resize", () => this._onResize());
         this._onResize();
@@ -62,20 +65,22 @@ class Game {
         // return;
         this._lanes.move(dt * 0.001);
         this._chicken.updatePosition(dt * 0.001);
+        this._chicken.update(dt);
+        this._chickenCamera.update();
     }
 
     /**
      * Draws game on canvas. This method has to be called multiple times per frame.
      */
     draw() {
-        this._renderer.render(this._world.scene, this._camera);
+        if (!this._assets.loaded) return;
+        this._renderer.render(this._world.scene, this._chickenCamera.camera);
     }
 
     // called when window is resized
     _onResize() {
         // update camera
-        this._camera.aspect = this._canvasContainer.clientWidth / this._canvasContainer.clientHeight;
-        this._camera.updateProjectionMatrix();
+        if (this._chickenCamera) this._chickenCamera.resize(this._canvasContainer.clientWidth / this._canvasContainer.clientHeight);
 
         // update renderer
         this._renderer.setSize(this._canvasContainer.clientWidth, this._canvasContainer.clientHeight);
@@ -89,7 +94,10 @@ class Game {
     // called after assets are loaded
     _onAssetsLoaded() {
         this._chicken = new Chicken(this._assets, this._gameController);
+        this._chickenCamera = new ChickenCamera(this._chicken, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight);
         this._lanes = new Lanes();
+
+        // new OrbitControls(this._chickenCamera.camera, this._canvasContainer);
 
         this._world.addMesh(this._chicken.mesh);
         this._world.addMesh(this._lanes.mesh);

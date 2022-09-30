@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Config from '../Config';
 import DoublyLinkedList from './DoublyLinkedList';
+import GrassLane from './GrassLane';
 import Lane from './Lane';
 import ObjectPool from './ObjectPool';
 
@@ -28,13 +29,26 @@ class Lanes {
         this._grassSideMaterial = new THREE.MeshPhongMaterial({
             color: 0x358342
         });
+        this._roadMaterial = new THREE.MeshPhongMaterial({
+            color: 0x40403e
+        });
+        this._roadSideMaterial = new THREE.MeshPhongMaterial({
+            color: 0x262625
+        });
 
         // object pools for lanes
         this._grassLanesObjectPool = new ObjectPool(
-            Lane,
+            GrassLane,
             [
                 this._groundGeometry, this._grassMaterial,
                 this._groundSideGeometry, this._grassSideMaterial
+            ]
+        );
+        this._roadLanesObjectPool = new ObjectPool(
+            Lane,
+            [
+                this._groundGeometry, this._roadMaterial,
+                this._groundSideGeometry, this._roadSideMaterial
             ]
         );
 
@@ -63,8 +77,10 @@ class Lanes {
             this._lanes.shift();
 
             // return lane to appropriate Object Pool
-            if (firstLane instanceof Lane) {
+            if (firstLane instanceof GrassLane) {
                 this._grassLanesObjectPool.return(firstLane);
+            } else if (firstLane instanceof Lane) {
+                this._roadLanesObjectPool.return(firstLane);
             }
 
             // create new lane
@@ -86,12 +102,21 @@ class Lanes {
     // adds new randomly generated lane at passed position
     _addRandomLane(position) {
         // get random number
-        let number = Math.floor(Math.random() * 1);
+        let number = Math.floor(Math.random() * 2);
     
         // create lane based on random number
+        let lane;
         switch (number) {
             case 0: // GRASS LANE
-                const lane = this._grassLanesObjectPool.get();
+                lane = this._grassLanesObjectPool.get();
+
+                this.mesh.add(lane.mesh);
+                lane.mesh.position.z = position;
+                
+                this._lanes.push(lane);
+                break;
+            case 1: // ROAD LANE
+                lane = this._roadLanesObjectPool.get();
 
                 this.mesh.add(lane.mesh);
                 lane.mesh.position.z = position;
