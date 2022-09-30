@@ -6,9 +6,10 @@ class ChickenCamera {
     /**
      * Creates new chicken camera.
      * @param {Chicken} chicken Chicken to be followed by camera.
+     * @param {Lanes} lanes Lanes to control camera position on Z axis.
      * @param {number} aspectRatio Aspect ratio of camera.
      */
-    constructor(chicken, aspectRatio) {
+    constructor(chicken, lanes, aspectRatio) {
         // create camera
         this.camera = new THREE.PerspectiveCamera(40, aspectRatio, 0.1, 500);
         // set camera start position
@@ -18,6 +19,7 @@ class ChickenCamera {
         this.camera.lookAt(0, 0.7, 0);
 
         this._chicken = chicken;
+        this._lanes = lanes;
     }
 
     /**
@@ -28,6 +30,11 @@ class ChickenCamera {
         this.camera.position.x = (
             Config.CAMERA_START_POSITION.x + this._chicken.mesh.position.x
         );
+
+        if (this._chicken.mesh.position.z < 0) {
+            this._lanes.move(-this._chicken.mesh.position.z);
+            this._chicken.updatePosition(-this._chicken.mesh.position.z);
+        }
     }
 
     /**
