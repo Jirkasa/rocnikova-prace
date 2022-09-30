@@ -25,15 +25,16 @@ class ChickenCamera {
     /**
      * Updates chicken camera. This method has to be called multiple times per frame.
      */
-    update() {
+    update(dt) {
         // move camera horizontally based on position of chicken
         this.camera.position.x = (
             Config.CAMERA_START_POSITION.x + this._chicken.mesh.position.x
         );
 
         if (this._chicken.mesh.position.z < 0) {
-            this._lanes.move(-this._chicken.mesh.position.z);
-            this._chicken.updatePosition(-this._chicken.mesh.position.z);
+            console.log(dt);
+            this._lanes.move(-this._chicken.mesh.position.z*dt/300);
+            this._chicken.updatePosition(-this._chicken.mesh.position.z*dt/300);
         }
     }
 

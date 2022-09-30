@@ -66,7 +66,7 @@ class Game {
         this._lanes.move(dt * 0.001);
         this._chicken.updatePosition(dt * 0.001);
         this._chicken.update(dt);
-        this._chickenCamera.update();
+        this._chickenCamera.update(dt);
     }
 
     /**
