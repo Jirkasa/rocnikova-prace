@@ -17,15 +17,17 @@ class ObjectPool {
      * @returns Resource to use.
      */
     get() {
-        // create new resource if there are no resources to be reused
+        let resource;
         if (this._resources.length === 0) {
-            return new this._resourceConstructor(...this._constructorParams);
+            // create new resource if there are no resources to be reused
+            resource = new this._resourceConstructor(...this._constructorParams);
+        } else {
+            // get resource to be reused
+            resource = this._resources.pop();
         }
 
-        // get resource to be reused
-        const resource = this._resources.pop();
         // initialize resource
-        resource?.init();
+        if (resource.init) resource.init();
         // return initialized resource
         return resource;
     }
@@ -36,7 +38,7 @@ class ObjectPool {
      */
     return(resource) {
         // reset resource
-        resource?.reset();
+        if (resource.reset) resource?.reset();
         // store resource to be reused
         this._resources.push(resource);
     }

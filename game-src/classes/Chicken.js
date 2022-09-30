@@ -75,15 +75,19 @@ class Chicken {
 
     // called when signal to move forward is sent from GameController
     _onControllerMoveForward() {
-        this._zPosChanger.addPosition(-Config.TILE_SIZE);
         this._rotationChanger.setRotation(Math.PI);
+        if (!this._lanes.canMoveForward) return;
+        this._lanes.moveForward();
+        this._zPosChanger.addPosition(-Config.TILE_SIZE);
         this._chickenJumpControl.jump();
     }
 
     // called when signal to move back is sent from GameController
     _onControllerMoveBack() {
-        this._zPosChanger.addPosition(Config.TILE_SIZE);
         this._rotationChanger.setRotation(0);
+        if (!this._lanes.canMoveBack) return;
+        this._lanes.moveBack();
+        this._zPosChanger.addPosition(Config.TILE_SIZE);
         this._chickenJumpControl.jump();
     }
 }

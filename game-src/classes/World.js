@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import Config from '../Config';
-import Lane from './Lane';
 
 /** Represents world for game. (It contains Three.js scene.) */
 class World {

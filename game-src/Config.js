@@ -10,6 +10,7 @@ import * as THREE from 'three';
  * @prop {number} CAMERA_START_POSITION Start position of camera.
  * @prop {number} CHICKEN_SPEED Speed of chicken in miliseconds (moving, rotation and jumping).
  * @prop {number} CAMERA_DAMPING Damping for camera movement.
+ * @prop {number} MAX_NUMBER_OF_TREES_PER_LANE Maximum number of trees per lane.
  */
 const Config = {
     TILE_SIZE: 1.3,
@@ -20,7 +21,9 @@ const Config = {
     CAMERA_START_POSITION: new THREE.Vector3(4, 8, 9),
     CHICKEN_JUMP_HEIGHT: 0.5,
     CHICKEN_SPEED: 150,
-    CAMERA_DAMPING: 300
+    CAMERA_DAMPING: 300,
+    MAX_NUMBER_OF_TREES_PER_LANE: 4,
+    TREE_MAX_LEAVES_HEIGHT: 1.6
 }
 
 export default Config;

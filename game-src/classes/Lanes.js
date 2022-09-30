@@ -4,6 +4,7 @@ import DoublyLinkedList from './DoublyLinkedList';
 import GrassLane from './GrassLane';
 import Lane from './Lane';
 import ObjectPool from './ObjectPool';
+import Tree from './Tree';
 
 /** Manages lanes (moves them, checks for collision, and so on...). */
 class Lanes {
@@ -22,6 +23,8 @@ class Lanes {
         // geometries
         this._groundGeometry = new THREE.PlaneGeometry(Config.NUMBER_OF_TILES * Config.TILE_SIZE, Config.TILE_SIZE);
         this._groundSideGeometry = new THREE.PlaneGeometry(Config.SIDE_GROUND_SIZE, Config.TILE_SIZE);
+        this._treeTrunkGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+        this._treeLeavesGeometry = new THREE.BoxGeometry(0.9, 1.6, 0.9);
         // materials
         this._grassMaterial = new THREE.MeshPhongMaterial({
             color: 0x53c466
@@ -35,13 +38,27 @@ class Lanes {
         this._roadSideMaterial = new THREE.MeshPhongMaterial({
             color: 0x262625
         });
+        this._treeTrunkMaterial = new THREE.MeshPhongMaterial({
+            color: 0x5e4617
+        });
+        this._treeLeavesMaterial = new THREE.MeshPhongMaterial({
+            color: 0x229a36
+        });
 
-        // object pools for lanes
+        // object pools
+        this._treesObjectPool = new ObjectPool(
+            Tree,
+            [
+                this._treeTrunkGeometry, this._treeTrunkMaterial,
+                this._treeLeavesGeometry, this._treeLeavesMaterial
+            ]
+        );
         this._grassLanesObjectPool = new ObjectPool(
             GrassLane,
             [
                 this._groundGeometry, this._grassMaterial,
-                this._groundSideGeometry, this._grassSideMaterial
+                this._groundSideGeometry, this._grassSideMaterial,
+                this._treesObjectPool
             ]
         );
         this._roadLanesObjectPool = new ObjectPool(
@@ -56,7 +73,6 @@ class Lanes {
 
         this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
         this._currentLaneNode = this._getStartLane();
-        console.log(this._currentLaneNode);
     }
 
     /**
@@ -99,7 +115,8 @@ class Lanes {
      */
     get canMoveLeft() {
         if (this._currentXTile === 1) return false;
-        return true;
+        if (this._currentLaneNode.value.isTileEmpty(this._currentXTile-1)) return true;
+        return false;
     }
 
     /**
@@ -108,7 +125,26 @@ class Lanes {
      */
     get canMoveRight() {
         if (this._currentXTile === Config.NUMBER_OF_TILES) return false;
-        return true;
+        if (this._currentLaneNode.value.isTileEmpty(this._currentXTile+1)) return true;
+        return false;
+    }
+
+    /**
+     * Indicates whether chicken can move forward.
+     * @type {boolean}
+     */
+    get canMoveForward() {
+        if (this._currentLaneNode.next.value.isTileEmpty(this._currentXTile)) return true;
+        return false;
+    }
+
+    /**
+     * Indicates whether chicken can move back.
+     * @type {boolean}
+     */
+    get canMoveBack() {
+        if (this._currentLaneNode.prev.value.isTileEmpty(this._currentXTile)) return true;
+        return false;
     }
 
     /**
@@ -125,6 +161,20 @@ class Lanes {
         this._currentXTile++;
     }
 
+    /**
+     * Moves forward.
+     */
+    moveForward() {
+        this._currentLaneNode = this._currentLaneNode.next;
+    }
+
+    /**
+     * Moves back.
+     */
+    moveBack() {
+        this._currentLaneNode = this._currentLaneNode.prev;
+    }
+
     // generates lanes (used at start of game)
     _generateLanes() {
         for (let i = 0; i < Config.NUMBER_OF_VISIBLE_LANES; i++) {
@@ -135,6 +185,7 @@ class Lanes {
         }
     }
 
+    // returns start lane (lane at position 0)
     _getStartLane() {
         let node = this._lanes.head;
         while (node) {

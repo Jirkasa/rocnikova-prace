@@ -52,8 +52,6 @@ class Game {
         this._onResize();
         this._assets.onLoad.subscribe(() => this._onAssetsLoaded());
         this._assets.onProgress.subscribe((_, percentage) => this._onLoadingProgress(percentage));
-
-        // new OrbitControls(this._camera, this._canvasContainer);
     }
 
     /**

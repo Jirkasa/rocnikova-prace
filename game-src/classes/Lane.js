@@ -73,6 +73,15 @@ class Lane {
         // add created grounds to group
         this.mesh.add(ground, leftSideGround, rightSideGround);
     }
+
+    /**
+     * Determines whether tile is empty.
+     * @param {number} tileNumber Number of tile to check whether it is empty.
+     * @returns {boolean}
+     */
+    isTileEmpty(tileNumber) {
+        return true;
+    }
 }
 
 export default Lane;
