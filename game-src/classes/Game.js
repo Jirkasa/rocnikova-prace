@@ -93,8 +93,8 @@ class Game {
 
     // called after assets are loaded
     _onAssetsLoaded() {
-        this._chicken = new Chicken(this._assets, this._gameController);
         this._lanes = new Lanes();
+        this._chicken = new Chicken(this._assets, this._lanes, this._gameController);
         this._chickenCamera = new ChickenCamera(this._chicken, this._lanes, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight);
 
         // new OrbitControls(this._chickenCamera.camera, this._canvasContainer);

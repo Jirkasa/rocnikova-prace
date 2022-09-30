@@ -53,6 +53,10 @@ class Lanes {
         );
 
         this._generateLanes();
+
+        this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
+        this._currentLaneNode = this._getStartLane();
+        console.log(this._currentLaneNode);
     }
 
     /**
@@ -89,6 +93,38 @@ class Lanes {
         }
     }
 
+    /**
+     * Indicates whether chicken can move left.
+     * @type {boolean}
+     */
+    get canMoveLeft() {
+        if (this._currentXTile === 1) return false;
+        return true;
+    }
+
+    /**
+     * Indicates whether chicken can move right.
+     * @type {boolean}
+     */
+    get canMoveRight() {
+        if (this._currentXTile === Config.NUMBER_OF_TILES) return false;
+        return true;
+    }
+
+    /**
+     * Moves left.
+     */
+    moveLeft() {
+        this._currentXTile--;
+    }
+
+    /**
+     * Moves right.
+     */
+    moveRight() {
+        this._currentXTile++;
+    }
+
     // generates lanes (used at start of game)
     _generateLanes() {
         for (let i = 0; i < Config.NUMBER_OF_VISIBLE_LANES; i++) {
@@ -96,6 +132,14 @@ class Lanes {
                 -i * Config.TILE_SIZE
                 + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE)
             );
+        }
+    }
+
+    _getStartLane() {
+        let node = this._lanes.head;
+        while (node) {
+            if (node.value.mesh.position.z === 0) return node;
+            node = node.next;
         }
     }
 

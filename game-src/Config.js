@@ -9,6 +9,7 @@ import * as THREE from 'three';
  * @prop {number} MAX_LANE_POSITION Maximum position of lane until it is removed.
  * @prop {number} CAMERA_START_POSITION Start position of camera.
  * @prop {number} CHICKEN_SPEED Speed of chicken in miliseconds (moving, rotation and jumping).
+ * @prop {number} CAMERA_DAMPING Damping for camera movement.
  */
 const Config = {
     TILE_SIZE: 1.3,
@@ -18,7 +19,8 @@ const Config = {
     MAX_LANE_POSITION: 20,
     CAMERA_START_POSITION: new THREE.Vector3(4, 8, 9),
     CHICKEN_JUMP_HEIGHT: 0.5,
-    CHICKEN_SPEED: 150
+    CHICKEN_SPEED: 150,
+    CAMERA_DAMPING: 300
 }
 
 export default Config;

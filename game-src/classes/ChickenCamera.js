@@ -32,9 +32,8 @@ class ChickenCamera {
         );
 
         if (this._chicken.mesh.position.z < 0) {
-            console.log(dt);
-            this._lanes.move(-this._chicken.mesh.position.z*dt/300);
-            this._chicken.updatePosition(-this._chicken.mesh.position.z*dt/300);
+            this._lanes.move(-this._chicken.mesh.position.z*dt/Config.CAMERA_DAMPING);
+            this._chicken.updatePosition(-this._chicken.mesh.position.z*dt/Config.CAMERA_DAMPING);
         }
     }
 

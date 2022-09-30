@@ -9,15 +9,18 @@ class Chicken {
     /**
      * Creates new chicken.
      * @param {Assets} assets Loaded assets.
+     * @param {Lanes} lanes Lanes.
      * @param {GameController} gameController Game controller to be used to control chicken.
      */
-    constructor(assets, gameController) {
+    constructor(assets, lanes, gameController) {
         // get mesh from loaded assets
         this.mesh = assets.getAsset("Chicken Model").scene.children[0];
         // change material
         this.mesh.material = new THREE.MeshPhongMaterial({
             vertexColors: true
         });
+
+        this._lanes = lanes;
 
         // subscribe to events of GameController
         gameController.onMoveLeft.subscribe(() => this._onControllerMoveLeft());
@@ -54,15 +57,19 @@ class Chicken {
 
     // called when signal to move left is sent from GameController
     _onControllerMoveLeft() {
-        this._xPosChanger.addPosition(-Config.TILE_SIZE);
         this._rotationChanger.setRotation(-Math.PI/2);
+        if (!this._lanes.canMoveLeft) return;
+        this._lanes.moveLeft();
+        this._xPosChanger.addPosition(-Config.TILE_SIZE);
         this._chickenJumpControl.jump();
     }
 
     // called when signal to move right is sent from GameController
     _onControllerMoveRight() {
-        this._xPosChanger.addPosition(Config.TILE_SIZE);
         this._rotationChanger.setRotation(Math.PI/2);
+        if (!this._lanes.canMoveRight) return;
+        this._lanes.moveRight();
+        this._xPosChanger.addPosition(Config.TILE_SIZE);
         this._chickenJumpControl.jump();
     }
 
