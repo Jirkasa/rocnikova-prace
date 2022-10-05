@@ -19,6 +19,7 @@ import * as THREE from 'three';
  * @prop {number} CAR_BACK_FROM_ORIGIN Distance to back of car from origin of car.
  * @prop {number} MIN_DISTANCE_BETWEEN_CARS Minimum distance between cars.
  * @prop {number} MAX_DISTANCE_BETWEEN_CARS Maximum distance between cars.
+ * @prop {number} MAX_NUMBER_OF_GRASS_LANES_NEXT_TO_EACH_OTHER Maximum number of grass lanes next to each other.
  */
 const Config = {
     TILE_SIZE: 1.3,
@@ -38,7 +39,8 @@ const Config = {
     CAR_FRONT_FROM_ORIGIN: 1.69836,
     CAR_BACK_FROM_ORIGIN: 1.34549,
     MIN_DISTANCE_BETWEEN_CARS: 5,
-    MAX_DISTANCE_BETWEEN_CARS: 15
+    MAX_DISTANCE_BETWEEN_CARS: 15,
+    MAX_NUMBER_OF_GRASS_LANES_NEXT_TO_EACH_OTHER: 2
 }
 
 export default Config;

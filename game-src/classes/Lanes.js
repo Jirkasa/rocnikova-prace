@@ -77,6 +77,13 @@ class Lanes {
                 this._treesObjectPool
             ]
         );
+        this._emptyGrassLanesObjectPool = new ObjectPool(
+            Lane,
+            [
+                this._groundGeometry, this._grassMaterial,
+                this._groundSideGeometry, this._grassSideMaterial
+            ]
+        );
         this._roadLanesObjectPool = new ObjectPool(
             RoadLane,
             [
@@ -90,6 +97,8 @@ class Lanes {
 
         this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
         this._currentLaneNode = this._getStartLane();
+
+        this._numberOfGrassLanes = 0;
     }
 
     /**
@@ -118,6 +127,8 @@ class Lanes {
                 this._grassLanesObjectPool.return(firstLane);
             } else if (firstLane instanceof RoadLane) {
                 this._roadLanesObjectPool.return(firstLane);
+            } else if (firstLane instanceof Lane) {
+                this._emptyGrassLanesObjectPool.return(firstLane);
             }
 
             // create new lane
@@ -241,22 +252,24 @@ class Lanes {
         let lane;
         switch (number) {
             case 0: // GRASS LANE
-                lane = this._grassLanesObjectPool.get();
-
-                this.mesh.add(lane.mesh);
-                lane.mesh.position.z = position;
-                
-                this._lanes.push(lane);
+                if (this._numberOfGrassLanes === Config.MAX_NUMBER_OF_GRASS_LANES_NEXT_TO_EACH_OTHER) {
+                    lane = this._emptyGrassLanesObjectPool.get();
+                    this._numberOfGrassLanes = 0;
+                } else {
+                    lane = this._grassLanesObjectPool.get();
+                    this._numberOfGrassLanes++;
+                }
                 break;
             case 1: // ROAD LANE
                 lane = this._roadLanesObjectPool.get();
-
-                this.mesh.add(lane.mesh);
-                lane.mesh.position.z = position;
-                
-                this._lanes.push(lane);
+                this._numberOfGrassLanes = 0;
                 break;
         }
+
+        this.mesh.add(lane.mesh);
+        lane.mesh.position.z = position;
+        
+        this._lanes.push(lane);
     }
 }
 
