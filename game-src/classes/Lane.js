@@ -33,6 +33,27 @@ class Lane {
         this.mesh.position.z += amount;
     }
 
+    /** Updates lane. */
+    update(dt) {}
+
+    /**
+     * Determines whether tile is empty.
+     * @param {number} tileNumber Number of tile to check whether it is empty.
+     * @returns {boolean}
+     */
+     isTileEmpty(tileNumber) {
+        return true;
+    }
+
+    /**
+     * Checks whether chicken is colliding.
+     * @param {number} xPosition X position of chicken.
+     * @returns {boolean}
+     */
+    isColliding(xPosition) {
+        return false;
+    }
+
     /** init method for object pooling. */
     init() {
         this.mesh.visible = true;
@@ -72,15 +93,6 @@ class Lane {
 
         // add created grounds to group
         this.mesh.add(ground, leftSideGround, rightSideGround);
-    }
-
-    /**
-     * Determines whether tile is empty.
-     * @param {number} tileNumber Number of tile to check whether it is empty.
-     * @returns {boolean}
-     */
-    isTileEmpty(tileNumber) {
-        return true;
     }
 }
 

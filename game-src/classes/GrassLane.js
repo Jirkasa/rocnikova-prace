@@ -21,7 +21,7 @@ class GrassLane extends Lane {
         this._trees = new Map();
     }
 
-    /** Init method for object pooling */
+    /** Init method for object pooling. */
     init() {
         super.init();
 

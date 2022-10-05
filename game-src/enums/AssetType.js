@@ -4,7 +4,9 @@
  */
 const AssetType = {
     /** GLTF file (.glb, .gltf). */
-    GLTF: 0
+    GLTF: 0,
+    /** Audio file. */
+    AUDIO: 1
 }
 
 export default AssetType;

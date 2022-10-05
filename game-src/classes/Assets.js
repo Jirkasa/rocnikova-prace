@@ -29,6 +29,7 @@ class Assets {
         this._assets = new Map();
         this._loadingManager = new THREE.LoadingManager();
         this._gltfLoader = new GLTFLoader(this._loadingManager);
+        this._audioLoader = new THREE.AudioLoader(this._loadingManager);
 
         // subscribe to loading manager events
         this._loadingManager.onLoad = () => this._onLoaded();
@@ -50,11 +51,16 @@ class Assets {
     _loadAssets(assets) {
         // for every asset description
         for (let asset of assets) {
-            // load asset based on its type (for now, there's only GLTF)
+            // load asset based on its type
             switch (asset.type) {
                 case AssetType.GLTF:
                     this._gltfLoader.load(asset.src, gltf => {
                         this._assets.set(asset.name, gltf);
+                    });
+                    break;
+                case AssetType.AUDIO:
+                    this._audioLoader.load(asset.src, buffer => {
+                        this._assets.set(asset.name, buffer);
                     });
                     break;
             }

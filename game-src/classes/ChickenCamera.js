@@ -10,13 +10,23 @@ class ChickenCamera {
      * @param {number} aspectRatio Aspect ratio of camera.
      */
     constructor(chicken, lanes, aspectRatio) {
-        // create camera
+        /**
+         * Three.js camera.
+         * @type {PerspectiveCamera}
+         */
         this.camera = new THREE.PerspectiveCamera(40, aspectRatio, 0.1, 500);
         // set camera start position
         this.camera.position.x = Config.CAMERA_START_POSITION.x;
         this.camera.position.y = Config.CAMERA_START_POSITION.y;
         this.camera.position.z = Config.CAMERA_START_POSITION.z;
         this.camera.lookAt(0, 0.7, 0);
+
+        /**
+         * Three.js audio listener.
+         * @type {AudioListener}
+         */
+        this.audioListener = new THREE.AudioListener();
+        this.camera.add(this.audioListener);
 
         this._chicken = chicken;
         this._lanes = lanes;

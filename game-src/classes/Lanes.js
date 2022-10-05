@@ -1,15 +1,20 @@
 import * as THREE from 'three';
 import Config from '../Config';
+import Car from './Car';
 import DoublyLinkedList from './DoublyLinkedList';
 import GrassLane from './GrassLane';
 import Lane from './Lane';
 import ObjectPool from './ObjectPool';
+import RoadLane from './RoadLane';
 import Tree from './Tree';
 
 /** Manages lanes (moves them, checks for collision, and so on...). */
 class Lanes {
-    /** Creates new lanes. */
-    constructor() {
+    /**
+     * Creates new lanes.
+     * @param {Assets} assets Loaded assets.
+     */
+    constructor(assets) {
         /**
          * Group containing lanes.
          * @type {Group}
@@ -25,6 +30,7 @@ class Lanes {
         this._groundSideGeometry = new THREE.PlaneGeometry(Config.SIDE_GROUND_SIZE, Config.TILE_SIZE);
         this._treeTrunkGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
         this._treeLeavesGeometry = new THREE.BoxGeometry(0.9, 1.6, 0.9);
+        this._carGeometry = assets.getAsset("Car Model").scene.children[0].geometry;
         // materials
         this._grassMaterial = new THREE.MeshPhongMaterial({
             color: 0x53c466
@@ -44,6 +50,9 @@ class Lanes {
         this._treeLeavesMaterial = new THREE.MeshPhongMaterial({
             color: 0x229a36
         });
+        this._carMaterial = new THREE.MeshPhongMaterial({
+            vertexColors: true
+        });
 
         // object pools
         this._treesObjectPool = new ObjectPool(
@@ -53,6 +62,13 @@ class Lanes {
                 this._treeLeavesGeometry, this._treeLeavesMaterial
             ]
         );
+        this._carsObjectPool = new ObjectPool(
+            Car,
+            [
+                this._carGeometry,
+                this._carMaterial
+            ]
+        )
         this._grassLanesObjectPool = new ObjectPool(
             GrassLane,
             [
@@ -62,10 +78,11 @@ class Lanes {
             ]
         );
         this._roadLanesObjectPool = new ObjectPool(
-            Lane,
+            RoadLane,
             [
                 this._groundGeometry, this._roadMaterial,
-                this._groundSideGeometry, this._roadSideMaterial
+                this._groundSideGeometry, this._roadSideMaterial,
+                this._carsObjectPool
             ]
         );
 
@@ -96,16 +113,28 @@ class Lanes {
             // first lane is removed from linked list
             this._lanes.shift();
 
-            // return lane to appropriate Object Pool
+            // return removed lane to appropriate Object Pool
             if (firstLane instanceof GrassLane) {
                 this._grassLanesObjectPool.return(firstLane);
-            } else if (firstLane instanceof Lane) {
+            } else if (firstLane instanceof RoadLane) {
                 this._roadLanesObjectPool.return(firstLane);
             }
 
             // create new lane
             const lastLane = this._lanes.tail.value;
             this._addRandomLane(lastLane.mesh.position.z - Config.TILE_SIZE);
+        }
+    }
+
+    /**
+     * Updates lanes.
+     * @param {number} dt Delta time.
+     */
+    update(dt) {
+        let node = this._lanes.head;
+        while (node) {
+            node.value.update(dt);
+            node = node.next;
         }
     }
 
@@ -173,6 +202,15 @@ class Lanes {
      */
     moveBack() {
         this._currentLaneNode = this._currentLaneNode.prev;
+    }
+
+    /**
+     * Checks whether chicken is colliding.
+     * @param {number} xPosition Position of chicken on X axis.
+     * @returns {boolean}
+     */
+    isColliding(xPosition) {
+        return this._currentLaneNode.value.isColliding(xPosition);
     }
 
     // generates lanes (used at start of game)

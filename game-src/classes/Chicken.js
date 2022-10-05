@@ -13,12 +13,29 @@ class Chicken {
      * @param {GameController} gameController Game controller to be used to control chicken.
      */
     constructor(assets, lanes, gameController) {
-        // get mesh from loaded assets
+        /**
+         * Mesh with chicken model.
+         * @type {Mesh}
+         */
         this.mesh = assets.getAsset("Chicken Model").scene.children[0];
         // change material
         this.mesh.material = new THREE.MeshPhongMaterial({
             vertexColors: true
         });
+
+        this._isDead = false;
+
+        /**
+         * Dead sound for chicken.
+         * @type {Audio}
+         */
+        this.deadSound = null;
+        /**
+         * Move sounds for chicken.
+         * @type {[Audio]}
+         */
+        this.sounds = null;
+        this._currentSoundIdx = 0;
 
         this._lanes = lanes;
 
@@ -51,44 +68,83 @@ class Chicken {
     update(dt) {
         this._xPosChanger.update(dt);
         this._zPosChanger.update(dt);
+
+        if (this._isDead) return;
+
         this._rotationChanger.update(dt);
         this._chickenJumpControl.update(dt);
+
+        if (this._lanes.isColliding(this.mesh.position.x)) {
+            if (this.deadSound) this.deadSound.play();
+            this._isDead = true;
+            this.mesh.scale.y = 0.01;
+        }
     }
 
     // called when signal to move left is sent from GameController
     _onControllerMoveLeft() {
+        if (this._isDead) return;
+
         this._rotationChanger.setRotation(-Math.PI/2);
+
         if (!this._lanes.canMoveLeft) return;
         this._lanes.moveLeft();
+        this._playMoveSound();
+
         this._xPosChanger.addPosition(-Config.TILE_SIZE);
         this._chickenJumpControl.jump();
     }
 
     // called when signal to move right is sent from GameController
     _onControllerMoveRight() {
+        if (this._isDead) return;
+
         this._rotationChanger.setRotation(Math.PI/2);
+
         if (!this._lanes.canMoveRight) return;
         this._lanes.moveRight();
+        this._playMoveSound();
+
         this._xPosChanger.addPosition(Config.TILE_SIZE);
         this._chickenJumpControl.jump();
     }
 
     // called when signal to move forward is sent from GameController
     _onControllerMoveForward() {
+        if (this._isDead) return;
+
         this._rotationChanger.setRotation(Math.PI);
+
         if (!this._lanes.canMoveForward) return;
         this._lanes.moveForward();
+        this._playMoveSound();
+
         this._zPosChanger.addPosition(-Config.TILE_SIZE);
         this._chickenJumpControl.jump();
     }
 
     // called when signal to move back is sent from GameController
     _onControllerMoveBack() {
+        if (this._isDead) return;
+
         this._rotationChanger.setRotation(0);
+
         if (!this._lanes.canMoveBack) return;
         this._lanes.moveBack();
+        this._playMoveSound();
+
         this._zPosChanger.addPosition(Config.TILE_SIZE);
         this._chickenJumpControl.jump();
+    }
+
+    // plays move sound for chicken
+    _playMoveSound() {
+        if (!this.sounds) return;
+
+        this.sounds[this._currentSoundIdx].play();
+
+        this._currentSoundIdx++;
+        if (this._currentSoundIdx === this.sounds.length) this._currentSoundIdx = 0;
     }
 }
 

@@ -30,20 +30,45 @@ class Game {
                 name: "Chicken Model",
                 src: "./assets/Chicken.glb",
                 type: AssetType.GLTF
+            },
+            {
+                name: "Car Model",
+                src: "./assets/Car.glb",
+                type: AssetType.GLTF
+            },
+            {
+                name: "Cars Sound",
+                src: "./assets/cars.ogg",
+                type: AssetType.AUDIO
+            },
+            {
+                name: "Deads Sound",
+                src: "./assets/chickenDead.ogg",
+                type: AssetType.AUDIO
+            },
+            {
+                name: "Chicken Sound 1",
+                src: "./assets/Chicken1.ogg",
+                type: AssetType.AUDIO
+            },
+            {
+                name: "Chicken Sound 2",
+                src: "./assets/Chicken2.ogg",
+                type: AssetType.AUDIO
+            },
+            {
+                name: "Chicken Sound 3",
+                src: "./assets/Chicken3.ogg",
+                type: AssetType.AUDIO
+            },
+            {
+                name: "Chicken Sound 4",
+                src: "./assets/Chicken4.ogg",
+                type: AssetType.AUDIO
             }
         ]);
         this._gameController = gameController;
         this._lanes = null;
-
-        // this._camera = new THREE.PerspectiveCamera(40, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight, 0.1, 500); // TODO - potom to změnit
-        // this._camera.position.x = 4;
-        // this._camera.position.y = 8;
-        // this._camera.position.z = 9;
-        // this._camera.lookAt(0, 0.7, 0);
-
-        // gui.add(this._camera.position, "x").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
-        // gui.add(this._camera.position, "y").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
-        // gui.add(this._camera.position, "z").min(-20).max(20).step(0.01).onChange(() => this._camera.lookAt(0, 0.7, 0));
 
         this._chicken = null;
         this._chickenCamera = null;
@@ -52,6 +77,33 @@ class Game {
         this._onResize();
         this._assets.onLoad.subscribe(() => this._onAssetsLoaded());
         this._assets.onProgress.subscribe((_, percentage) => this._onLoadingProgress(percentage));
+
+        // todo - pro zatím (potom to bude po kliknutí na tlačítko start nebo tak něco)
+        // - zvuky se spustí jen až po provedení nějaké akce uživatelem, jinak to nejde
+        window.addEventListener("click", () => {
+            const sound = new THREE.Audio(this._chickenCamera.audioListener);
+            sound.setBuffer(this._assets.getAsset("Cars Sound"));
+            sound.setLoop(true);
+            sound.play();
+
+            const deadSound = new THREE.Audio(this._chickenCamera.audioListener);
+            deadSound.setBuffer(this._assets.getAsset("Deads Sound"));
+            this._chicken.deadSound = deadSound;
+
+            const chickenSound1 = new THREE.Audio(this._chickenCamera.audioListener);
+            chickenSound1.setVolume(0.3);
+            const chickenSound2 = new THREE.Audio(this._chickenCamera.audioListener);
+            chickenSound2.setVolume(0.3);
+            const chickenSound3 = new THREE.Audio(this._chickenCamera.audioListener);
+            chickenSound3.setVolume(0.3);
+            const chickenSound4 = new THREE.Audio(this._chickenCamera.audioListener);
+            chickenSound4.setVolume(0.3);
+            chickenSound1.setBuffer(this._assets.getAsset("Chicken Sound 1"));
+            chickenSound2.setBuffer(this._assets.getAsset("Chicken Sound 2"));
+            chickenSound3.setBuffer(this._assets.getAsset("Chicken Sound 3"));
+            chickenSound4.setBuffer(this._assets.getAsset("Chicken Sound 4"));
+            this._chicken.sounds = [chickenSound1, chickenSound2, chickenSound3, chickenSound4];
+        });
     }
 
     /**
@@ -60,9 +112,13 @@ class Game {
      */
     update(dt) {
         if (!this._assets.loaded) return;
-        // return;
+
+        // move lanes and chicken (create illusion of moving camera)
         this._lanes.move(dt * 0.001);
         this._chicken.updatePosition(dt * 0.001);
+
+        this._lanes.update(dt);
+
         this._chicken.update(dt);
         this._chickenCamera.update(dt);
     }
@@ -91,7 +147,7 @@ class Game {
 
     // called after assets are loaded
     _onAssetsLoaded() {
-        this._lanes = new Lanes();
+        this._lanes = new Lanes(this._assets);
         this._chicken = new Chicken(this._assets, this._lanes, this._gameController);
         this._chickenCamera = new ChickenCamera(this._chicken, this._lanes, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight);
 
