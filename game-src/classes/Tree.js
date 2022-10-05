@@ -53,7 +53,6 @@ class Tree {
      */
     setPosition(tileNumber) {
         this.mesh.position.x = (-Config.NUMBER_OF_TILES*Config.TILE_SIZE/2) - Config.TILE_SIZE/2 + Config.TILE_SIZE * tileNumber;
-        // TODO - ty stromky mohou zablokovat cestu úplně, takže to nějak pořešit - prostě to udělám tak, že se budou moci zobrazit jen 2 GrassLane za sebou a potom prázdná
     }
 }
 

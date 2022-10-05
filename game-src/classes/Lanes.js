@@ -226,7 +226,14 @@ class Lanes {
 
     // generates lanes (used at start of game)
     _generateLanes() {
-        for (let i = 0; i < Config.NUMBER_OF_VISIBLE_LANES; i++) {
+        for (let i = 0; i < Config.NUMBER_OF_VISIBLE_LANES/2+1; i++) {
+            let lane = this._emptyGrassLanesObjectPool.get();
+            this.mesh.add(lane.mesh);
+            lane.mesh.position.z = -i * Config.TILE_SIZE
+            + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE);
+            this._lanes.push(lane);
+        }
+        for (let i = Config.NUMBER_OF_VISIBLE_LANES/2+1; i < Config.NUMBER_OF_VISIBLE_LANES; i++) {
             this._addRandomLane(
                 -i * Config.TILE_SIZE
                 + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE)
