@@ -24,6 +24,8 @@ class Game {
         });
         this._canvasContainer = document.getElementById(canvasContainerId);
 
+        this._soundsCreated = false;
+
         this._world = new World();
         this._assets = new Assets([
             {
@@ -81,6 +83,9 @@ class Game {
         // todo - pro zatím (potom to bude po kliknutí na tlačítko start nebo tak něco)
         // - zvuky se spustí jen až po provedení nějaké akce uživatelem, jinak to nejde
         window.addEventListener("click", () => {
+            if (this._soundsCreated) return;
+            this._soundsCreated = true;
+            
             const sound = new THREE.Audio(this._chickenCamera.audioListener);
             sound.setBuffer(this._assets.getAsset("Cars Sound"));
             sound.setLoop(true);
