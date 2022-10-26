@@ -1,0 +1,121 @@
+.home-intro-section {
+    height: ~"calc(100vh - @{header-height})";
+
+    background-color: @colors[grey-20];
+    background-image: linear-gradient(180deg, rgba(@colors[black], 0.6) 0%, rgba(@colors[black], 0.4) 82.89%, rgba(@colors[black], 0.2) 100%), url("../../css-images/HomeIntroImage.png");
+    background-size: cover;
+
+    &__container {
+        max-width: @grid-width;
+        margin: 0 auto;
+
+        height: 100%;
+
+        #display-12-grid();
+    }
+
+    &__image-side {
+        grid-column: span 5;
+
+        position: relative;
+
+        img {
+            width: 41rem;
+            
+            position: absolute;
+            left: 50%;
+            bottom: -10.4rem;
+            transform: translateX(-50%);
+
+            max-width: @grid-width;
+        }
+    }
+
+    &__content-side {
+        grid-column: span 7;
+
+        display: flex;
+        align-items: center;
+    }
+
+    &__box {
+        padding: 2.4rem;
+        background-color: @colors[grey-80];
+        width: 100%;
+
+        hr {
+            border: none;
+            width: 16rem;
+            max-width: 100%;
+
+            height: .4rem;
+            background-color: @colors[secondary];
+        }
+    }
+
+    &__buttons {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+    }
+}
+
+.home-leaderboard-container {
+    #display-12-grid();
+
+    * {
+        grid-column: 2 / span 10;
+    }
+}
+
+.home-gallery-section {
+    #display-12-grid();
+
+    background-color: @colors[grey-20];
+
+    padding: 3.2rem;
+
+    &__image {
+        height: 29.6rem;
+
+        grid-column: span 4;
+
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+.home-about-section {
+    #display-12-grid();
+
+    position: relative;
+
+    // side illustration patterns
+    &::before, &::after {
+        content: "";
+
+        position: absolute;
+        width: 6.4rem;
+        height: 100%;
+
+        background-image: url("../../css-images/Pattern.svg");
+        background-repeat: repeat-y;
+
+        top: 0;
+    }
+    &::before {
+        left: 0;
+    }
+    &::after {
+        right: 0;
+    }
+
+    &__content {
+        grid-column: 3 / span 8;
+
+        padding: 3.2rem 0;
+    }
+}

@@ -21,7 +21,16 @@
     <div class="page">
         <header class="header">
             <div class="header__content">
-                <a href="<?php echo URLROOT; ?>" class="header__title"><?php echo SITENAME; ?></a>
-                <div></div>
+                <a href="<?php echo URLROOT; ?>" class="header__home-link">
+                    <img src="./img/Logo.svg" alt="Logo" class="header__logo">
+                    <span class="header__title"><?php echo SITENAME; ?></span>
+                </a>
+                <nav class="header__navigation">
+                    <ul>
+                        <li><a href="<?php echo URLROOT; ?>/hra" class="header__navigation-item">Hrát</a></li>
+                        <li><a href="#" class="header__navigation-item">Přihlásit se</a></li>
+                        <li><a href="#" class="header__navigation-item">Vytvořit účet</a></li>
+                    </ul>
+                </nav>
             </div>
         </header>

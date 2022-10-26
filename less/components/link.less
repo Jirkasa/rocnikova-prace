@@ -1,0 +1,14 @@
+.link {
+    &:link, &:visited {
+        color: @colors[secondary];
+
+        text-decoration: underline;
+
+        transition: all .1s;
+    }
+
+    &:hover {
+        color: @colors[grey-80];
+        background-color: @colors[secondary];
+    }
+}

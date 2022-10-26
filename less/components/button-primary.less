@@ -1,0 +1,55 @@
+.button-primary {
+    &, &:link, &:visited {
+        display: inline-flex;
+        align-items: center;
+        gap: .8rem;
+
+        font-size: 1.6rem;
+        line-height: 2.4rem;
+
+        text-decoration: none;
+        text-transform: uppercase;
+        color: @colors[white];
+
+        padding: .8rem 1.2rem;
+
+        background-color: @colors[secondary];
+
+        transition: all .1s;
+    }
+
+    &:hover {
+        background-color: darken(@colors[secondary], 9%);
+    }
+
+    svg {
+        width: 2rem;
+        height: 2rem;
+        fill: @colors[white];
+    }
+
+    &--outlined {
+        &, &:link, &:visited {
+            background-color: transparent;
+
+            color: @colors[secondary];
+            border: .2rem solid @colors[secondary];
+
+            padding: .6rem 1rem;
+        }
+
+        svg {
+            fill: @colors[secondary];
+        }
+
+        &:hover {
+            border-color: darken(@colors[secondary], 9%);
+            background-color: darken(@colors[secondary], 9%);
+            color: @colors[white];
+
+            svg {
+                fill: @colors[white];
+            }
+        }
+    }
+}

@@ -12,16 +12,53 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        padding: .8rem 0;
+    }
+
+    &__home-link {
+        &:link, &:visited {
+            text-decoration: none;
+
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+    }
+
+    &__logo {
+        width: 3.2rem;
     }
 
     &__title {
+        font-size: 3.2rem;
+        font-weight: 600;
+        line-height: 1;
+
+        color: @colors[white];
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+
+    &__navigation {
+        ul {
+            list-style: none;
+
+            display: flex;
+            align-items: center;
+            gap: 2.4rem;
+        }
+    }
+
+    &__navigation-item {
         &:link, &:visited {
-            font-size: 3.2rem;
+            font-size: 1.6rem;
             line-height: 1;
 
-            color: @colors[white];
-            text-transform: uppercase;
             text-decoration: none;
+            text-transform: uppercase;
+
+            color: @colors[white];
         }
     }
 }

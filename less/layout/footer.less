@@ -1,0 +1,23 @@
+.footer {
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+
+    color: @colors[white];
+    text-align: center;
+
+    background-color: @colors[grey-80];
+
+    padding: .8rem 3.2rem;
+
+    &__link {
+        &:link, &:visited {
+            color: @colors[primary];
+
+            text-decoration: none;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
