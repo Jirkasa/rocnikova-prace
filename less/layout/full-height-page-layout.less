@@ -1,0 +1,19 @@
+.full-height-page-layout {
+    display: flex;
+    flex-direction: column;
+
+    height: ~"calc(100vh - @{header-height})";
+
+    background-color: @colors[grey-20];
+
+    &__container {
+        flex: 2;
+        align-self: center;
+
+        width: 100%;
+        max-width: @grid-width;
+
+        #display-12-grid();
+        align-items: center;
+    }
+}

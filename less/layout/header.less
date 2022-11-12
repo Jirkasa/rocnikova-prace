@@ -53,12 +53,17 @@
     &__navigation-item {
         &:link, &:visited {
             font-size: 1.6rem;
+            font-weight: 500;
             line-height: 1;
 
             text-decoration: none;
             text-transform: uppercase;
 
             color: @colors[white];
+        }
+
+        &:hover {
+            text-decoration: underline;
         }
     }
 }

@@ -28,8 +28,21 @@
                 <nav class="header__navigation">
                     <ul>
                         <li><a href="<?php echo URLROOT; ?>/hra" class="header__navigation-item">Hrát</a></li>
-                        <li><a href="#" class="header__navigation-item">Přihlásit se</a></li>
-                        <li><a href="#" class="header__navigation-item">Vytvořit účet</a></li>
+                        <?php if (isLoggedIn()) { ?>
+                            <li>
+                                <a href="<?php echo URLROOT; ?>/profile" class="profile-button">
+                                    <div class="profile-button__icon">
+                                        <svg>
+                                            <use xlink:href="<?php echo URLROOT; ?>/static/icon-sprite.svg#person"></use>
+                                        </svg>
+                                    </div>
+                                    <span class="profile-button__username"><?php echo $_SESSION["user_username"]; ?></span>
+                                </a>
+                            </li>
+                        <?php } else { ?>
+                            <li><a href="<?php echo URLROOT; ?>/prihlaseni" class="header__navigation-item">Přihlásit se</a></li>
+                            <li><a href="<?php echo URLROOT; ?>/registrace" class="header__navigation-item">Vytvořit účet</a></li>
+                        <?php } ?>
                     </ul>
                 </nav>
             </div>

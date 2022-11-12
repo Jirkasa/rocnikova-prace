@@ -1,0 +1,43 @@
+.message-card {
+    grid-column: 2 / span 10;
+
+    background-color: @colors[white];
+
+    padding: 3.2rem 12.8rem;
+
+    position: relative;
+
+    hr {
+        max-width: 16rem;
+        height: .4rem;
+
+        margin: 0 auto;
+
+        background-color: @colors[grey-20];
+        border: none;
+    }
+
+    &__text {
+        max-width: 54.4rem;
+        margin: 0 auto;
+    }
+
+    &::before, &::after {
+        content: "";
+
+        width: 6.4rem;
+        height: 100%;
+
+        position: absolute;
+        top: 0;
+
+        background-image: url("../../css-images/Pattern.svg");
+        background-repeat: repeat-y;
+    }
+    &::before {
+        left: 3.2rem;
+    }
+    &::after {
+        right: 3.2rem;
+    }
+}

@@ -1,0 +1,28 @@
+.logout-button {
+    &:link, &:visited {
+        display: inline-flex;
+        align-items: center;
+        gap: .8rem;
+
+        color: @colors[grey-60];
+
+        text-decoration: none;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    svg {
+        width: 1.6rem;
+        height: 1.6rem;
+        fill: @colors[grey-60];
+    }
+
+    span {
+        font-size: 1.6rem;
+        line-height: 1;
+
+        text-transform: uppercase;
+    }
+}
