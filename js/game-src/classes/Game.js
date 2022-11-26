@@ -23,6 +23,7 @@ class Game {
             canvas: document.getElementById(canvasId)
         });
         this._canvasContainer = document.getElementById(canvasContainerId);
+        this._loadIcon = document.getElementById("GameLoadIcon");
 
         this._soundsCreated = false;
 
@@ -78,7 +79,6 @@ class Game {
         window.addEventListener("resize", () => this._onResize());
         this._onResize();
         this._assets.onLoad.subscribe(() => this._onAssetsLoaded());
-        this._assets.onProgress.subscribe((_, percentage) => this._onLoadingProgress(percentage));
 
         // todo - pro zatím (potom to bude po kliknutí na tlačítko start nebo tak něco)
         // - zvuky se spustí jen až po provedení nějaké akce uživatelem, jinak to nejde
@@ -145,21 +145,16 @@ class Game {
         this._renderer.setSize(this._canvasContainer.clientWidth, this._canvasContainer.clientHeight);
     }
 
-    // called when assets loading progress occurs
-    _onLoadingProgress(percentage) {
-        console.log(percentage);
-    }
-
     // called after assets are loaded
     _onAssetsLoaded() {
         this._lanes = new Lanes(this._assets);
         this._chicken = new Chicken(this._assets, this._lanes, this._gameController);
         this._chickenCamera = new ChickenCamera(this._chicken, this._lanes, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight);
 
-        // new OrbitControls(this._chickenCamera.camera, this._canvasContainer);
-
         this._world.addMesh(this._chicken.mesh);
         this._world.addMesh(this._lanes.mesh);
+
+        this._loadIcon.style.display = "none";
     }
 }
 

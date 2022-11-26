@@ -7,3 +7,4 @@ import './logout.svg';
 import './person-add.svg';
 import './person.svg';
 import './search-off.svg';
+import './spinner.svg';
