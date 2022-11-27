@@ -5,6 +5,8 @@ import AssetType from '../enums/AssetType';
 import World from './World';
 import Lanes from './Lanes';
 import ChickenCamera from './ChickenCamera';
+import StartWindow from './StartWindow';
+import Score from './Score';
 
 /** The main class for game. */
 class Game {
@@ -21,7 +23,11 @@ class Game {
         this._canvasContainer = document.getElementById(canvasContainerId);
         this._loadIcon = document.getElementById("GameLoadIcon");
 
-        this._soundsCreated = false;
+        this._startWindow = new StartWindow("Start");
+        this._startWindow.onStart.subscribe(() => this._onStart());
+        // this._canvasContainer.appendChild(this._startWindow.domElement);
+
+        this._gameStarted = false;
 
         this._world = new World();
         this._assets = new Assets([
@@ -68,6 +74,7 @@ class Game {
         ]);
         this._gameController = gameController;
         this._lanes = null;
+        this._score = null;
 
         this._chicken = null;
         this._chickenCamera = null;
@@ -78,33 +85,42 @@ class Game {
 
         // todo - pro zatím (potom to bude po kliknutí na tlačítko start nebo tak něco)
         // - zvuky se spustí jen až po provedení nějaké akce uživatelem, jinak to nejde
-        window.addEventListener("click", () => {
-            if (this._soundsCreated) return;
-            this._soundsCreated = true;
-            
-            const sound = new THREE.Audio(this._chickenCamera.audioListener);
-            sound.setBuffer(this._assets.getAsset("Cars Sound"));
-            sound.setLoop(true);
-            sound.play();
+        // window.addEventListener("click", () => {
+        //     if (this._soundsCreated) return;
+        //     this._soundsCreated = true;
+        // });
+    }
 
-            const deadSound = new THREE.Audio(this._chickenCamera.audioListener);
-            deadSound.setBuffer(this._assets.getAsset("Deads Sound"));
-            this._chicken.deadSound = deadSound;
+    _onStart() {
+        this._createSounds();
+        this._chicken.canMove = true;
+        this._canvasContainer.removeChild(this._startWindow.domElement);
+        this._gameStarted = true;
+    }
 
-            const chickenSound1 = new THREE.Audio(this._chickenCamera.audioListener);
-            chickenSound1.setVolume(0.3);
-            const chickenSound2 = new THREE.Audio(this._chickenCamera.audioListener);
-            chickenSound2.setVolume(0.3);
-            const chickenSound3 = new THREE.Audio(this._chickenCamera.audioListener);
-            chickenSound3.setVolume(0.3);
-            const chickenSound4 = new THREE.Audio(this._chickenCamera.audioListener);
-            chickenSound4.setVolume(0.3);
-            chickenSound1.setBuffer(this._assets.getAsset("Chicken Sound 1"));
-            chickenSound2.setBuffer(this._assets.getAsset("Chicken Sound 2"));
-            chickenSound3.setBuffer(this._assets.getAsset("Chicken Sound 3"));
-            chickenSound4.setBuffer(this._assets.getAsset("Chicken Sound 4"));
-            this._chicken.sounds = [chickenSound1, chickenSound2, chickenSound3, chickenSound4];
-        });
+    _createSounds() {
+        const sound = new THREE.Audio(this._chickenCamera.audioListener);
+        sound.setBuffer(this._assets.getAsset("Cars Sound"));
+        sound.setLoop(true);
+        sound.play();
+
+        const deadSound = new THREE.Audio(this._chickenCamera.audioListener);
+        deadSound.setBuffer(this._assets.getAsset("Deads Sound"));
+        this._chicken.deadSound = deadSound;
+
+        const chickenSound1 = new THREE.Audio(this._chickenCamera.audioListener);
+        chickenSound1.setVolume(0.3);
+        const chickenSound2 = new THREE.Audio(this._chickenCamera.audioListener);
+        chickenSound2.setVolume(0.3);
+        const chickenSound3 = new THREE.Audio(this._chickenCamera.audioListener);
+        chickenSound3.setVolume(0.3);
+        const chickenSound4 = new THREE.Audio(this._chickenCamera.audioListener);
+        chickenSound4.setVolume(0.3);
+        chickenSound1.setBuffer(this._assets.getAsset("Chicken Sound 1"));
+        chickenSound2.setBuffer(this._assets.getAsset("Chicken Sound 2"));
+        chickenSound3.setBuffer(this._assets.getAsset("Chicken Sound 3"));
+        chickenSound4.setBuffer(this._assets.getAsset("Chicken Sound 4"));
+        this._chicken.sounds = [chickenSound1, chickenSound2, chickenSound3, chickenSound4];
     }
 
     /**
@@ -115,8 +131,10 @@ class Game {
         if (!this._assets.loaded) return;
 
         // move lanes and chicken (create illusion of moving camera)
-        this._lanes.move(dt * 0.001);
-        this._chicken.updatePosition(dt * 0.001);
+        if (this._gameStarted) {
+            this._lanes.move(dt * 0.001);
+            this._chicken.updatePosition(dt * 0.001);
+        }
 
         this._lanes.update(dt);
 
@@ -147,11 +165,14 @@ class Game {
         this._lanes = new Lanes(this._assets);
         this._chicken = new Chicken(this._assets, this._lanes, this._gameController);
         this._chickenCamera = new ChickenCamera(this._chicken, this._lanes, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight);
+        this._score = new Score("Score", this._lanes);
 
         this._world.addMesh(this._chicken.mesh);
         this._world.addMesh(this._lanes.mesh);
 
         this._loadIcon.style.display = "none";
+
+        this._canvasContainer.appendChild(this._startWindow.domElement)
     }
 }
 

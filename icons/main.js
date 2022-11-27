@@ -6,5 +6,6 @@ import './leaderboard.svg';
 import './logout.svg';
 import './person-add.svg';
 import './person.svg';
+import './play.svg';
 import './search-off.svg';
 import './spinner.svg';

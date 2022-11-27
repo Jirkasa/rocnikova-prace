@@ -8,6 +8,7 @@ import Lane from './lanes/Lane';
 import ObjectPool from './utils/ObjectPool';
 import RoadLane from './lanes/RoadLane';
 import Tree from './lanes/Tree';
+import EventSource from './utils/EventSource';
 
 /** Manages lanes (moves them, checks for collision, and so on...). */
 class Lanes {
@@ -21,6 +22,8 @@ class Lanes {
          * @type {Group}
          */
         this.mesh = new THREE.Group();
+
+        this.onNewHighestYTile = new EventSource();
 
         // used to render lanes (update instanced meshes)
         this._instancedMeshesRenderer = new InstancedMeshesRenderer(assets, this.mesh);
@@ -41,6 +44,9 @@ class Lanes {
         this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
         // determines at what lane is player currently located
         this._currentLaneNode = this._getStartLane();
+
+        this.highestYTile = 0;
+        this._currentYTile = 0;
 
         // used to keep track of how many grass lanes there are next to each other
         // - there can be just two grass lanes (with trees) next
@@ -171,6 +177,12 @@ class Lanes {
      */
     moveForward() {
         this._currentLaneNode = this._currentLaneNode.next;
+
+        this._currentYTile++;
+        if (this._currentYTile > this.highestYTile) {
+            this.highestYTile = this._currentYTile;
+            this.onNewHighestYTile.fire(this, this.highestYTile);
+        }
     }
 
     /**
@@ -178,6 +190,8 @@ class Lanes {
      */
     moveBack() {
         this._currentLaneNode = this._currentLaneNode.prev;
+
+        this._currentYTile--;
     }
 
     /**

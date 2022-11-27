@@ -22,6 +22,7 @@ class Chicken {
         this.mesh.material = new THREE.MeshPhongMaterial({
             vertexColors: true
         });
+        this.canMove = false;
 
         this._isDead = false;
 
@@ -83,7 +84,7 @@ class Chicken {
 
     // called when signal to move left is sent from GameController
     _onControllerMoveLeft() {
-        if (this._isDead) return;
+        if (this._isDead || !this.canMove) return;
 
         this._rotationChanger.setRotation(-Math.PI/2);
 
@@ -97,7 +98,7 @@ class Chicken {
 
     // called when signal to move right is sent from GameController
     _onControllerMoveRight() {
-        if (this._isDead) return;
+        if (this._isDead || !this.canMove) return;
 
         this._rotationChanger.setRotation(Math.PI/2);
 
@@ -111,7 +112,7 @@ class Chicken {
 
     // called when signal to move forward is sent from GameController
     _onControllerMoveForward() {
-        if (this._isDead) return;
+        if (this._isDead || !this.canMove) return;
 
         this._rotationChanger.setRotation(Math.PI);
 
@@ -125,7 +126,7 @@ class Chicken {
 
     // called when signal to move back is sent from GameController
     _onControllerMoveBack() {
-        if (this._isDead) return;
+        if (this._isDead || !this.canMove) return;
 
         this._rotationChanger.setRotation(0);
 

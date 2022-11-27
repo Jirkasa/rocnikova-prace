@@ -6,6 +6,7 @@
                 <use xlink:href="./static/icon-sprite.svg#spinner"></use>
             </svg>
         </div>
+        <div class="game__score">Skóre: <span id="Score">0</span></div>
     </div>
     <script src="<?php echo ASSETSROOT; ?>/js/game.js"></script>
 <?php require_once APPROOT . '/src/views/includes/page-end.php'; ?>
