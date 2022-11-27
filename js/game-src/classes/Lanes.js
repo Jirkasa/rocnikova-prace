@@ -54,6 +54,30 @@ class Lanes {
         this._numberOfGrassLanes = 0;
     }
 
+    reset() {
+        while (this._lanes.length > 0) {
+            let lane = this._lanes.shift();
+
+            if (lane instanceof GrassLane) {
+                this._grassLanesObjectPool.return(lane);
+            } else if (lane instanceof RoadLane) {
+                this._roadLanesObjectPool.return(lane);
+            } else if (lane instanceof Lane) {
+                this._emptyGrassLanesObjectPool.return(lane);
+            }
+        }
+
+        this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
+
+        this.highestYTile = 0;
+        this._currentYTile = 0;
+
+        this._generateLanes();
+        this._currentLaneNode = this._getStartLane();
+
+        this._numberOfGrassLanes = 0;
+    }
+
     /**
      * Moves lanes.
      * @param {number} amount Distance to move lanes by.

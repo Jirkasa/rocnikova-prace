@@ -7,6 +7,7 @@ import Lanes from './Lanes';
 import ChickenCamera from './ChickenCamera';
 import StartWindow from './StartWindow';
 import Score from './Score';
+import ResultWindow from './ResultWindow';
 
 /** The main class for game. */
 class Game {
@@ -25,6 +26,8 @@ class Game {
 
         this._startWindow = new StartWindow("Start");
         this._startWindow.onStart.subscribe(() => this._onStart());
+        this._resultWindow = new ResultWindow("Výsledky");
+        this._resultWindow.onRestart.subscribe(() => this._onRestart());
         // this._canvasContainer.appendChild(this._startWindow.domElement);
 
         this._gameStarted = false;
@@ -82,13 +85,6 @@ class Game {
         window.addEventListener("resize", () => this._onResize());
         this._onResize();
         this._assets.onLoad.subscribe(() => this._onAssetsLoaded());
-
-        // todo - pro zatím (potom to bude po kliknutí na tlačítko start nebo tak něco)
-        // - zvuky se spustí jen až po provedení nějaké akce uživatelem, jinak to nejde
-        // window.addEventListener("click", () => {
-        //     if (this._soundsCreated) return;
-        //     this._soundsCreated = true;
-        // });
     }
 
     _onStart() {
@@ -96,6 +92,30 @@ class Game {
         this._chicken.canMove = true;
         this._canvasContainer.removeChild(this._startWindow.domElement);
         this._gameStarted = true;
+        this._score.visible = true;
+    }
+
+    _onRestart() {
+        this._lanes.reset();
+        this._chicken.reset();
+
+        this._score.reset();
+        this._score.visible = true;
+
+        this._canvasContainer.removeChild(this._resultWindow.domElement);
+
+        this._gameStarted = true;
+    }
+
+    _onGameOver(tooSlow) {
+        this._score.visible = false;
+
+        this._resultWindow.setScore(this._score.value);
+        setTimeout(() => {
+            this._canvasContainer.appendChild(this._resultWindow.domElement);
+        }, tooSlow ? 0 : 1000);
+
+        this._gameStarted = false;
     }
 
     _createSounds() {
@@ -165,14 +185,16 @@ class Game {
         this._lanes = new Lanes(this._assets);
         this._chicken = new Chicken(this._assets, this._lanes, this._gameController);
         this._chickenCamera = new ChickenCamera(this._chicken, this._lanes, this._canvasContainer.clientWidth / this._canvasContainer.clientHeight);
-        this._score = new Score("Score", this._lanes);
+        this._score = new Score("Score", "ScoreValue", this._lanes);
+
+        this._chicken.onDead.subscribe((_, tooSlow) => this._onGameOver(tooSlow));
 
         this._world.addMesh(this._chicken.mesh);
         this._world.addMesh(this._lanes.mesh);
 
         this._loadIcon.style.display = "none";
 
-        this._canvasContainer.appendChild(this._startWindow.domElement)
+        this._canvasContainer.appendChild(this._startWindow.domElement);
     }
 }
 

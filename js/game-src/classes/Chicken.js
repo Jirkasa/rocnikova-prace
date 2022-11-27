@@ -3,6 +3,7 @@ import Config from '../Config';
 import ChickenJumpControl from './ChickenJumpControl';
 import PositionChanger from './PositionChanger';
 import RotationChanger from './RotationChanger';
+import EventSource from './utils/EventSource';
 
 /** Represents chicken (which is controlled by player in game). */
 class Chicken {
@@ -23,6 +24,8 @@ class Chicken {
             vertexColors: true
         });
         this.canMove = false;
+
+        this.onDead = new EventSource();
 
         this._isDead = false;
 
@@ -54,6 +57,12 @@ class Chicken {
         this._chickenJumpControl = new ChickenJumpControl(this, Config.CHICKEN_SPEED);
     }
 
+    reset() {
+        this._isDead = false;
+        this.mesh.position.set(0, 0, 0);
+        this.mesh.scale.set(1, 1, 1);
+    }
+
     /**
      * Updates position of chicken. (This method is used to synchronize movement of lanes with chicken.)
      * @param {number} amount Distance to update position of chicken by.
@@ -79,6 +88,13 @@ class Chicken {
             if (this.deadSound) this.deadSound.play();
             this._isDead = true;
             this.mesh.scale.y = 0.01;
+
+            this.onDead.fire(this, false);
+        }
+
+        if (this.mesh.position.z > 7) {
+            this._isDead = true;
+            this.onDead.fire(this, true);
         }
     }
 
