@@ -3,12 +3,8 @@ import Assets from './Assets';
 import Chicken from './Chicken';
 import AssetType from '../enums/AssetType';
 import World from './World';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Lanes from './Lanes';
-import * as dat from 'dat.gui';
 import ChickenCamera from './ChickenCamera';
-
-// const gui = new dat.GUI();
 
 /** The main class for game. */
 class Game {
@@ -129,7 +125,7 @@ class Game {
     }
 
     /**
-     * Draws game on canvas. This method has to be called multiple times per frame.
+     * Draws game on canvas. This method has to be called once per frame.
      */
     draw() {
         if (!this._assets.loaded) return;

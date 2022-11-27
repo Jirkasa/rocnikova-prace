@@ -1,4 +1,4 @@
-import EventSource from "./EventSource";
+import EventSource from "./utils/EventSource";
 
 /** Base class for game controller. Can be extended and used to control game. */
 class GameController {

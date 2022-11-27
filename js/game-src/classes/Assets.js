@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import AssetType from '../enums/AssetType';
-import EventSource from './EventSource';
+import EventSource from './utils/EventSource';
 
 /** Loads and stores assets. */
 class Assets {

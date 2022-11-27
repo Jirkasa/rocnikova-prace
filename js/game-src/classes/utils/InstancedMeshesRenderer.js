@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Config from '../Config';
+import Config from '../../Config';
 import InstancedMeshes from "./InstancedMeshes";
 
 class InstancedMeshesRenderer {

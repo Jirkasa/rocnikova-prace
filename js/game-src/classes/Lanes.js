@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import Config from '../Config';
-import Car from './Car';
-import DoublyLinkedList from './DoublyLinkedList';
-import GrassLane from './GrassLane';
-import InstancedMeshesRenderer from './InstancedMeshesRenderer';
-import Lane from './Lane';
-import ObjectPool from './ObjectPool';
-import RoadLane from './RoadLane';
-import Tree from './Tree';
+import Car from './lanes/Car';
+import DoublyLinkedList from './data-structures/DoublyLinkedList';
+import GrassLane from './lanes/GrassLane';
+import InstancedMeshesRenderer from './utils/InstancedMeshesRenderer';
+import Lane from './lanes/Lane';
+import ObjectPool from './utils/ObjectPool';
+import RoadLane from './lanes/RoadLane';
+import Tree from './lanes/Tree';
 
 /** Manages lanes (moves them, checks for collision, and so on...). */
 class Lanes {

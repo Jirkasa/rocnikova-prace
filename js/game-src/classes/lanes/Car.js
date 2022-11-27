@@ -1,5 +1,5 @@
 import { Object3D } from 'three';
-import Config from '../Config';
+import Config from '../../Config';
 
 /** Represents car. */
 class Car {

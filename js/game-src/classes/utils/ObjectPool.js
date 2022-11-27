@@ -26,9 +26,6 @@ class ObjectPool {
             resource = this._resources.pop();
         }
 
-        // // initialize resource
-        // // if (resource.init) resource.init();
-        // return initialized resource
         return resource;
     }
 

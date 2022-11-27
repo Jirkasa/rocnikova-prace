@@ -1,6 +1,5 @@
-import * as THREE from 'three';
 import { Object3D } from 'three';
-import Config from '../Config';
+import Config from '../../Config';
 
 /** Represents tree. */
 class Tree {
