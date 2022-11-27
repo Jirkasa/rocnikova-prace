@@ -5,7 +5,7 @@
                 <img src="./img/Chicken.png" alt="" class="profile-card__image">
                 <div class="profile-card__content">
                     <h2 class="heading-secondary u-mb-2"><?php echo $_SESSION["user_username"]; ?></h2>
-                    <h3 class="score-text u-mb-4">Skóre: <span class="score-text__value">0</span></h3>
+                    <h3 class="score-text u-mb-4">Skóre: <span class="score-text__value"><?php echo $data["score"] ?></span></h3>
                     <a href="<?php echo URLROOT; ?>/odhlaseni" class="logout-button">
                         <svg>
                             <use xlink:href="./static/icon-sprite.svg#logout"></use>

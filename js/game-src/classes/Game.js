@@ -26,7 +26,7 @@ class Game {
 
         this._startWindow = new StartWindow("Start");
         this._startWindow.onStart.subscribe(() => this._onStart());
-        this._resultWindow = new ResultWindow("Výsledky");
+        this._resultWindow = new ResultWindow("Výsledky", "ScoreValue");
         this._resultWindow.onRestart.subscribe(() => this._onRestart());
         // this._canvasContainer.appendChild(this._startWindow.domElement);
 
