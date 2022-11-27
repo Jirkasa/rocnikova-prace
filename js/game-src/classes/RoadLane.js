@@ -8,15 +8,10 @@ import Lane from "./Lane";
 class RoadLane extends Lane {
     /**
      * 
-     * @param {BufferGeometry} groundGeometry Geometry for ground.
-     * @param {Material} groundMaterial Material for ground.
-     * @param {BufferGeometry} groundSideGeometry Geometry for ground on sides (where player can't go).
-     * @param {Material} groundSideMaterial Material for ground on sides (where player can't go).
      * @param {ObjectPool} carsObjectPool Object pool for cars.
      */
-    constructor(groundGeometry, groundMaterial, groundSideGeometry, groundSideMaterial, carsObjectPool) {
-        super(groundGeometry, groundMaterial, groundSideGeometry, groundSideMaterial);
-
+    constructor(carsObjectPool) {
+        super();
         this._carsObjectPool = carsObjectPool;
         this._cars = [];
         this._toRight = false;
@@ -28,6 +23,25 @@ class RoadLane extends Lane {
         }
     }
 
+    move(amount) {
+        super.move(amount);
+        for (let car of this._cars) {
+            car.verticalPosition = this._object.position.z;
+        }
+    }
+
+    render(instancedMeshesRenderer) {
+        this._object.updateMatrix();
+        this._leftSideObject.updateMatrix();
+        this._rightSideObject.updateMatrix();
+
+        instancedMeshesRenderer.setRoad(this._object.matrix, this._leftSideObject.matrix, this._rightSideObject.matrix);
+
+        for (let car of this._cars) {
+            instancedMeshesRenderer.setCar(car.matrix);
+        }
+    }
+
     isColliding(xPosition) {
         for (let car of this._cars) {
             if (car.isColliding(xPosition)) return true;
@@ -36,8 +50,8 @@ class RoadLane extends Lane {
     }
 
     /** Init method for object pooling. */
-    init() {
-        super.init();
+    init(position) {
+        super.init(position);
 
         // get random values to generate cars
         let spaceBetweenCars = Math.random() * Config.MAX_DISTANCE_BETWEEN_CARS + Config.MIN_DISTANCE_BETWEEN_CARS + Config.CAR_SIZE;
@@ -48,22 +62,23 @@ class RoadLane extends Lane {
         // generate cars
         for (let currentPos = -maxPos + offset; currentPos <= maxPos-spaceBetweenCars; currentPos += spaceBetweenCars) {
             const car = this._carsObjectPool.get();
-            car.mesh.position.x = currentPos;
+            car.position = currentPos;
             if (this._toRight) {
-                car.mesh.rotation.y = Math.PI;
+                car.rotation = Math.PI;
             }
             this._cars.push(car);
-            this.mesh.add(car.mesh);
+            // this.mesh.add(car.mesh);
+            car.verticalPosition = this._object.position.z;
         }
     }
 
     /** Reset method for object pooling. */
     reset() {
-        super.reset();
+        // super.reset();
 
         while (this._cars.length > 0) {
             const car = this._cars.pop();
-            this.mesh.remove(car.mesh);
+            // this.mesh.remove(car.mesh);
             this._carsObjectPool.return(car);
         }
     }

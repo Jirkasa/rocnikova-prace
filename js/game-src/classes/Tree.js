@@ -1,36 +1,33 @@
 import * as THREE from 'three';
+import { Object3D } from 'three';
 import Config from '../Config';
 
 /** Represents tree. */
 class Tree {
-    /**
-     * Creates new tree.
-     * @param {BufferGeometry} trunkGeometry Geometry for trunk of tree.
-     * @param {Material} trunkMaterial Material for trunk of tree.
-     * @param {BufferGeometry} leavesGeometry Geometry for leaves of tree.
-     * @param {Material} leavesMaterial Material for leaves of tree.
-     */
-    constructor(trunkGeometry, trunkMaterial, leavesGeometry, leavesMaterial) {
-        /**
-         * Three.js group representing tree.
-         * @type {Group}
-         */
-        this.mesh = new THREE.Group();
+    constructor() {
+        this._trunkObject = new Object3D();
+        this._leavesObject = new Object3D();
 
-        // create trunk
-        const trunk = new THREE.Mesh(
-            trunkGeometry,
-            trunkMaterial
-        );
-        trunk.position.y = 0.2;
-        // create leaves
-        this._leaves = new THREE.Mesh(
-            leavesGeometry,
-            leavesMaterial
-        );
-        this._leaves.position.y = 1.2;
-        // add trunk and leaves to group
-        this.mesh.add(trunk, this._leaves);
+        this._trunkObject.position.y = 0.2;
+        this._leavesObject.position.y = 1.2;
+    }
+
+    get verticalPosition() {
+        return this._trunkObject.position.z;
+    }
+    set verticalPosition(value) {
+        this._trunkObject.position.z = value;
+        this._leavesObject.position.z = value;
+    }
+
+    get trunkMatrix() {
+        this._trunkObject.updateMatrix();
+        return this._trunkObject.matrix;
+    }
+
+    get leavesMatrix() {
+        this._leavesObject.updateMatrix();
+        return this._leavesObject.matrix;
     }
 
     /** Init method for object pooling. */
@@ -43,8 +40,8 @@ class Tree {
         // get offset to move leaves down to trunk after scale is applied
         const offset = (Config.TREE_MAX_LEAVES_HEIGHT - Config.TREE_MAX_LEAVES_HEIGHT * scale) / 2;
 
-        this._leaves.scale.y = scale;
-        this._leaves.position.y = 1.2 - offset;
+        this._leavesObject.scale.y = scale;
+        this._leavesObject.position.y = 1.2 - offset;
     }
 
     /**
@@ -52,7 +49,9 @@ class Tree {
      * @param {number} tileNumber Number of tile where to position tree.
      */
     setPosition(tileNumber) {
-        this.mesh.position.x = (-Config.NUMBER_OF_TILES*Config.TILE_SIZE/2) - Config.TILE_SIZE/2 + Config.TILE_SIZE * tileNumber;
+        let position = (-Config.NUMBER_OF_TILES*Config.TILE_SIZE/2) - Config.TILE_SIZE/2 + Config.TILE_SIZE * tileNumber
+        this._trunkObject.position.x = position;
+        this._leavesObject.position.x = position;
     }
 }
 

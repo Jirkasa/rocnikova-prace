@@ -3,6 +3,8 @@ import Config from '../Config';
 import Car from './Car';
 import DoublyLinkedList from './DoublyLinkedList';
 import GrassLane from './GrassLane';
+import InstancedMeshes from './InstancedMeshes';
+import InstancedMeshesRenderer from './InstancedMeshesRenderer';
 import Lane from './Lane';
 import ObjectPool from './ObjectPool';
 import RoadLane from './RoadLane';
@@ -20,79 +22,18 @@ class Lanes {
          * @type {Group}
          */
         this.mesh = new THREE.Group();
+        this._instancedMeshesRenderer = new InstancedMeshesRenderer(assets, this.mesh);
 
         // lanes are stored in doubly linked list
         // (They have to be added to the end and removed from beginning.)
         this._lanes = new DoublyLinkedList();
 
-        // geometries
-        this._groundGeometry = new THREE.PlaneGeometry(Config.NUMBER_OF_TILES * Config.TILE_SIZE, Config.TILE_SIZE);
-        this._groundSideGeometry = new THREE.PlaneGeometry(Config.SIDE_GROUND_SIZE, Config.TILE_SIZE);
-        this._treeTrunkGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-        this._treeLeavesGeometry = new THREE.BoxGeometry(0.9, 1.6, 0.9);
-        this._carGeometry = assets.getAsset("Car Model").scene.children[0].geometry;
-        // materials
-        this._grassMaterial = new THREE.MeshPhongMaterial({
-            color: 0x53c466
-        });
-        this._grassSideMaterial = new THREE.MeshPhongMaterial({
-            color: 0x358342
-        });
-        this._roadMaterial = new THREE.MeshPhongMaterial({
-            color: 0x40403e
-        });
-        this._roadSideMaterial = new THREE.MeshPhongMaterial({
-            color: 0x262625
-        });
-        this._treeTrunkMaterial = new THREE.MeshPhongMaterial({
-            color: 0x5e4617
-        });
-        this._treeLeavesMaterial = new THREE.MeshPhongMaterial({
-            color: 0x229a36
-        });
-        this._carMaterial = new THREE.MeshPhongMaterial({
-            vertexColors: true
-        });
-
         // object pools
-        this._treesObjectPool = new ObjectPool(
-            Tree,
-            [
-                this._treeTrunkGeometry, this._treeTrunkMaterial,
-                this._treeLeavesGeometry, this._treeLeavesMaterial
-            ]
-        );
-        this._carsObjectPool = new ObjectPool(
-            Car,
-            [
-                this._carGeometry,
-                this._carMaterial
-            ]
-        )
-        this._grassLanesObjectPool = new ObjectPool(
-            GrassLane,
-            [
-                this._groundGeometry, this._grassMaterial,
-                this._groundSideGeometry, this._grassSideMaterial,
-                this._treesObjectPool
-            ]
-        );
-        this._emptyGrassLanesObjectPool = new ObjectPool(
-            Lane,
-            [
-                this._groundGeometry, this._grassMaterial,
-                this._groundSideGeometry, this._grassSideMaterial
-            ]
-        );
-        this._roadLanesObjectPool = new ObjectPool(
-            RoadLane,
-            [
-                this._groundGeometry, this._roadMaterial,
-                this._groundSideGeometry, this._roadSideMaterial,
-                this._carsObjectPool
-            ]
-        );
-
+        this._treesObjectPool = new ObjectPool(Tree);
+        this._carsObjectPool = new ObjectPool(Car);
+        this._grassLanesObjectPool = new ObjectPool(GrassLane, [this._treesObjectPool]);
+        this._emptyGrassLanesObjectPool = new ObjectPool(Lane);
+        this._roadLanesObjectPool = new ObjectPool(RoadLane, [this._carsObjectPool]);
         this._generateLanes();
 
         this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
@@ -118,7 +59,7 @@ class Lanes {
 
         let firstLane = this._lanes.head.value;
         // if first lane is after MAX_LANE_POSITION
-        if (firstLane.mesh.position.z > Config.MAX_LANE_POSITION) {
+        if (firstLane.position > Config.MAX_LANE_POSITION) {
             // first lane is removed from linked list
             this._lanes.shift();
 
@@ -133,7 +74,7 @@ class Lanes {
 
             // create new lane
             const lastLane = this._lanes.tail.value;
-            this._addRandomLane(lastLane.mesh.position.z - Config.TILE_SIZE);
+            this._addRandomLane(lastLane.position - Config.TILE_SIZE);
         }
     }
 
@@ -147,6 +88,20 @@ class Lanes {
             node.value.update(dt);
             node = node.next;
         }
+    }
+
+    updateInstancedMeshes() {
+        this._instancedMeshesRenderer.begin();
+
+        let node = this._lanes.head;
+
+        while (node) {
+            // todo - set instane of instanced meshes
+            node.value.render(this._instancedMeshesRenderer);
+            node = node.next;
+        }
+
+        this._instancedMeshesRenderer.finish();
     }
 
     /**
@@ -228,9 +183,10 @@ class Lanes {
     _generateLanes() {
         for (let i = 0; i < Config.NUMBER_OF_VISIBLE_LANES/2+1; i++) {
             let lane = this._emptyGrassLanesObjectPool.get();
-            this.mesh.add(lane.mesh);
-            lane.mesh.position.z = -i * Config.TILE_SIZE
-            + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE);
+            lane.init(-i * Config.TILE_SIZE + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE));
+            // this.mesh.add(lane.mesh);
+            // lane.position = -i * Config.TILE_SIZE
+            // + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE);
             this._lanes.push(lane);
         }
         for (let i = Config.NUMBER_OF_VISIBLE_LANES/2+1; i < Config.NUMBER_OF_VISIBLE_LANES; i++) {
@@ -245,7 +201,7 @@ class Lanes {
     _getStartLane() {
         let node = this._lanes.head;
         while (node) {
-            if (node.value.mesh.position.z === 0) return node;
+            if (node.value.position === 0) return node;
             node = node.next;
         }
     }
@@ -273,8 +229,9 @@ class Lanes {
                 break;
         }
 
-        this.mesh.add(lane.mesh);
-        lane.mesh.position.z = position;
+        // this.mesh.add(lane.mesh);
+        // lane.position = position;
+        lane.init(position);
         
         this._lanes.push(lane);
     }

@@ -8,22 +8,17 @@ import Lane from "./Lane";
 class GrassLane extends Lane {
     /**
      * Creates new grass lane.
-     * @param {BufferGeometry} groundGeometry Geometry for ground.
-     * @param {Material} groundMaterial Material for ground.
-     * @param {BufferGeometry} groundSideGeometry Geometry for ground on sides (where player can't go).
-     * @param {Material} groundSideMaterial Material for ground on sides (where player can't go).
      * @param {ObjectPool} treesObjectPool Object pool for trees.
      */
-    constructor(groundGeometry, groundMaterial, groundSideGeometry, groundSideMaterial, treesObjectPool) {
-        super(groundGeometry, groundMaterial, groundSideGeometry, groundSideMaterial);
-
+    constructor(treesObjectPool) {
+        super();
         this._treesObjectPool = treesObjectPool;
         this._trees = new Map();
     }
 
     /** Init method for object pooling. */
-    init() {
-        super.init();
+    init(position) {
+        super.init(position);
 
         // generate random number of trees
         let numberOfTrees = Math.trunc(Math.random() * (Config.MAX_NUMBER_OF_TREES_PER_LANE+1));
@@ -46,20 +41,37 @@ class GrassLane extends Lane {
 
             // get tree
             const tree = this._treesObjectPool.get();
+            tree.init();
             tree.setPosition(treeTilePos);
 
             // add tree to scene and store
-            this.mesh.add(tree.mesh);
+            // this.mesh.add(tree.mesh);
             this._trees.set(treeTilePos, tree);
+            tree.verticalPosition = this._object.position.z;
         }
+    }
+
+    move(amount) {
+        super.move(amount);
+        this._trees.forEach(tree => {
+            tree.verticalPosition = this._object.position.z;
+        });
+    }
+
+    render(instancedMeshesRenderer) {
+        super.render(instancedMeshesRenderer);
+
+        this._trees.forEach(tree => {
+            instancedMeshesRenderer.setTree(tree.trunkMatrix, tree.leavesMatrix);
+        });
     }
 
     /** Reset method for object pooling. */
     reset() {
-        super.reset();
+        // super.reset();
         // delete (return) all trees
         for (let [key, tree] of this._trees.entries()) {
-            this.mesh.remove(tree.mesh);
+            // this.mesh.remove(tree.mesh);
             this._treesObjectPool.return(tree);
             this._trees.delete(key);
         }

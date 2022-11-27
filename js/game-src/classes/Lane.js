@@ -1,28 +1,37 @@
 import * as THREE from 'three';
+import { Object3D } from 'three';
 import Config from '../Config';
 
 /** Represents lane (one horizontal line). */
 class Lane {
     /**
      * Creates new lane.
-     * @param {BufferGeometry} groundGeometry Geometry for ground.
-     * @param {Material} groundMaterial Material for ground.
-     * @param {BufferGeometry} groundSideGeometry Geometry for ground on sides (where player can't go).
-     * @param {Material} groundSideMaterial Material for ground on sides (where player can't go).
      */
-    constructor(groundGeometry, groundMaterial, groundSideGeometry, groundSideMaterial) {
-        /**
-         * Group of meshes contained by lane.
-         * @type {Group}
-         */
-        this.mesh = new THREE.Group();
+    constructor() {
+        this._object = new Object3D();
+        this._leftSideObject = new Object3D();
+        this._rightSideObject = new Object3D();
 
-        this._createGround(
-            groundGeometry,
-            groundMaterial,
-            groundSideGeometry,
-            groundSideMaterial
+        this._object.rotateX(-Math.PI / 2);
+        this._leftSideObject.rotateX(-Math.PI / 2);
+        this._rightSideObject.rotateX(-Math.PI / 2);
+
+        this._leftSideObject.position.x = - (
+            (Config.SIDE_GROUND_SIZE / 2) + (Config.NUMBER_OF_TILES * Config.TILE_SIZE)/2
         );
+        this._rightSideObject.position.x = (
+            (Config.SIDE_GROUND_SIZE / 2) + (Config.NUMBER_OF_TILES * Config.TILE_SIZE)/2
+        );
+    }
+
+    get position() {
+        return this._object.position.z;
+    }
+
+    set position(value) {
+        this._object.position.z = value;
+        this._leftSideObject.position.z = value;
+        this._rightSideObject.position.z = value;
     }
 
     /**
@@ -30,11 +39,21 @@ class Lane {
      * @param {number} amount Distance to move lane by.
      */
     move(amount) {
-        this.mesh.position.z += amount;
+        this._object.position.z += amount;
+        this._leftSideObject.position.z += amount;
+        this._rightSideObject.position.z += amount;
     }
 
     /** Updates lane. */
     update(dt) {}
+
+    render(instancedMeshesRenderer) {
+        this._object.updateMatrix();
+        this._leftSideObject.updateMatrix();
+        this._rightSideObject.updateMatrix();
+
+        instancedMeshesRenderer.setGrass(this._object.matrix, this._leftSideObject.matrix, this._rightSideObject.matrix);
+    }
 
     /**
      * Determines whether tile is empty.
@@ -55,45 +74,15 @@ class Lane {
     }
 
     /** init method for object pooling. */
-    init() {
-        this.mesh.visible = true;
+    init(position) {
+        // this.mesh.visible = true;
+        this.position = position;
     }
 
-    /** reset method for object pooling */
-    reset() {
-        this.mesh.visible = false;
-    }
-
-    // creates ground for lane
-    _createGround(groundGeometry, groundMaterial, groundSideGeometry, groundSideMaterial) {
-        // create middle ground
-        const ground = new THREE.Mesh(
-            groundGeometry,
-            groundMaterial
-        );
-        ground.rotateX(-Math.PI / 2);
-        // create ground for left side (where player can't go)
-        const leftSideGround = new THREE.Mesh(
-            groundSideGeometry,
-            groundSideMaterial
-        );
-        leftSideGround.position.x = - (
-            (Config.SIDE_GROUND_SIZE / 2) + (Config.NUMBER_OF_TILES * Config.TILE_SIZE)/2
-        );
-        leftSideGround.rotateX(-Math.PI / 2);
-        // create ground for right side (where player can't go)
-        const rightSideGround = new THREE.Mesh(
-            groundSideGeometry,
-            groundSideMaterial
-        );
-        rightSideGround.position.x = (
-            (Config.SIDE_GROUND_SIZE / 2) + (Config.NUMBER_OF_TILES * Config.TILE_SIZE)/2
-        );
-        rightSideGround.rotateX(-Math.PI / 2);
-
-        // add created grounds to group
-        this.mesh.add(ground, leftSideGround, rightSideGround);
-    }
+    // /** reset method for object pooling */
+    // reset() {
+    //     // this.mesh.visible = false;
+    // }
 }
 
 export default Lane;

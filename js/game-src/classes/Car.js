@@ -1,25 +1,43 @@
 import * as THREE from 'three';
+import { Object3D } from 'three';
 import Config from '../Config';
 
 /** Represents car. */
 class Car {
-    /**
-     * Creates new car.
-     * @param {BufferGeometry} geometry Geometry of car.
-     * @param {Material} material Material of car.
-     */
-    constructor(geometry, material) {
-        /**
-         * Mesh of car.
-         * @type {Mesh}
-         */
-        this.mesh = new THREE.Mesh(geometry, material);
+    constructor() {
+        this._object = new Object3D();
+    }
+
+    get position() {
+        return this._object.position.x;
+    }
+    set position(value) {
+        this._object.position.x = value;
+    }
+
+    get rotation() {
+        return this._object.rotation.y;
+    }
+    set rotation(value) {
+        this._object.rotation.y = value;
+    }
+
+    get verticalPosition() {
+        return this._object.position.z;
+    }
+    set verticalPosition(value) {
+        this._object.position.z = value;
+    }
+
+    get matrix() {
+        this._object.updateMatrix();
+        return this._object.matrix;
     }
 
     /** Reset method for object pooling. */
     reset() {
-        this.mesh.position.x = 0;
-        this.mesh.rotation.y = 0;
+        this._object.position.x = 0;
+        this._object.rotation.y = 0;
     }
 
     /**
@@ -31,12 +49,12 @@ class Car {
         let carLeftPos, carRightPos;
         let chickenHitSize = Config.CHICKEN_HIT_SIZE/2;
 
-        if (this.mesh.rotation.y === Math.PI) {
-            carLeftPos = this.mesh.position.x - Config.CAR_BACK_FROM_ORIGIN;
-            carRightPos = this.mesh.position.x + Config.CAR_FRONT_FROM_ORIGIN;
+        if (this._object.rotation.y === Math.PI) {
+            carLeftPos = this._object.position.x - Config.CAR_BACK_FROM_ORIGIN;
+            carRightPos = this._object.position.x + Config.CAR_FRONT_FROM_ORIGIN;
         } else {
-            carLeftPos = this.mesh.position.x - Config.CAR_FRONT_FROM_ORIGIN;
-            carRightPos = this.mesh.position.x + Config.CAR_BACK_FROM_ORIGIN;
+            carLeftPos = this._object.position.x - Config.CAR_FRONT_FROM_ORIGIN;
+            carRightPos = this._object.position.x + Config.CAR_BACK_FROM_ORIGIN;
         }
 
         return (
@@ -53,15 +71,14 @@ class Car {
      */
     move(amount, toRight) {
         if (toRight) {
-            this.mesh.position.x += amount;
-            if (this.mesh.position.x > (Config.CAR_DRIVE_SPACE_SIZE / 2)) {
-                this.mesh.position.x -= Config.CAR_DRIVE_SPACE_SIZE;
+            this._object.position.x += amount;
+            if (this._object.position.x > (Config.CAR_DRIVE_SPACE_SIZE / 2)) {
+                this._object.position.x -= Config.CAR_DRIVE_SPACE_SIZE;
             }
-            
         } else {
-            this.mesh.position.x -= amount;
-            if (this.mesh.position.x < -(Config.CAR_DRIVE_SPACE_SIZE / 2)) {
-                this.mesh.position.x += Config.CAR_DRIVE_SPACE_SIZE;
+            this._object.position.x -= amount;
+            if (this._object.position.x < -(Config.CAR_DRIVE_SPACE_SIZE / 2)) {
+                this._object.position.x += Config.CAR_DRIVE_SPACE_SIZE;
             }
         }
     }

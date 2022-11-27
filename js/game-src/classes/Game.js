@@ -133,6 +133,7 @@ class Game {
      */
     draw() {
         if (!this._assets.loaded) return;
+        this._lanes.updateInstancedMeshes();
         this._renderer.render(this._world.scene, this._chickenCamera.camera);
     }
 

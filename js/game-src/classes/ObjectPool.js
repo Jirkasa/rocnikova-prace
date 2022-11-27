@@ -26,8 +26,8 @@ class ObjectPool {
             resource = this._resources.pop();
         }
 
-        // initialize resource
-        if (resource.init) resource.init();
+        // // initialize resource
+        // // if (resource.init) resource.init();
         // return initialized resource
         return resource;
     }
@@ -38,7 +38,7 @@ class ObjectPool {
      */
     return(resource) {
         // reset resource
-        if (resource.reset) resource?.reset();
+        if (resource.reset) resource.reset();
         // store resource to be reused
         this._resources.push(resource);
     }
