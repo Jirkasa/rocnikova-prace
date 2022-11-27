@@ -3,7 +3,6 @@ import Config from '../Config';
 import Car from './Car';
 import DoublyLinkedList from './DoublyLinkedList';
 import GrassLane from './GrassLane';
-import InstancedMeshes from './InstancedMeshes';
 import InstancedMeshesRenderer from './InstancedMeshesRenderer';
 import Lane from './Lane';
 import ObjectPool from './ObjectPool';
@@ -22,13 +21,15 @@ class Lanes {
          * @type {Group}
          */
         this.mesh = new THREE.Group();
+
+        // used to render lanes (update instanced meshes)
         this._instancedMeshesRenderer = new InstancedMeshesRenderer(assets, this.mesh);
 
         // lanes are stored in doubly linked list
         // (They have to be added to the end and removed from beginning.)
         this._lanes = new DoublyLinkedList();
 
-        // object pools
+        // object pools for reusing of objects
         this._treesObjectPool = new ObjectPool(Tree);
         this._carsObjectPool = new ObjectPool(Car);
         this._grassLanesObjectPool = new ObjectPool(GrassLane, [this._treesObjectPool]);
@@ -36,9 +37,14 @@ class Lanes {
         this._roadLanesObjectPool = new ObjectPool(RoadLane, [this._carsObjectPool]);
         this._generateLanes();
 
+        // determines at which tile is player currently located
         this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
+        // determines at what lane is player currently located
         this._currentLaneNode = this._getStartLane();
 
+        // used to keep track of how many grass lanes there are next to each other
+        // - there can be just two grass lanes (with trees) next
+        // to each other, otherwise road might be blocked
         this._numberOfGrassLanes = 0;
     }
 
@@ -59,6 +65,7 @@ class Lanes {
 
         let firstLane = this._lanes.head.value;
         // if first lane is after MAX_LANE_POSITION
+        // it is removed and new lane is generated
         if (firstLane.position > Config.MAX_LANE_POSITION) {
             // first lane is removed from linked list
             this._lanes.shift();
@@ -83,6 +90,7 @@ class Lanes {
      * @param {number} dt Delta time.
      */
     update(dt) {
+        // update every lane
         let node = this._lanes.head;
         while (node) {
             node.value.update(dt);
@@ -90,13 +98,15 @@ class Lanes {
         }
     }
 
+    /**
+     * Updates instanced meshes, so lanes can be properly rendered. This method should be called before every rendering.
+     */
     updateInstancedMeshes() {
         this._instancedMeshesRenderer.begin();
 
+        // call render method of each lane to update instanced meshes
         let node = this._lanes.head;
-
         while (node) {
-            // todo - set instane of instanced meshes
             node.value.render(this._instancedMeshesRenderer);
             node = node.next;
         }
@@ -181,14 +191,13 @@ class Lanes {
 
     // generates lanes (used at start of game)
     _generateLanes() {
+        // generate grass lanes (normal lanes without trees) up to chicken start position
         for (let i = 0; i < Config.NUMBER_OF_VISIBLE_LANES/2+1; i++) {
             let lane = this._emptyGrassLanesObjectPool.get();
             lane.init(-i * Config.TILE_SIZE + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE));
-            // this.mesh.add(lane.mesh);
-            // lane.position = -i * Config.TILE_SIZE
-            // + (Config.NUMBER_OF_VISIBLE_LANES/2 *Config.TILE_SIZE);
             this._lanes.push(lane);
         }
+        // generate random lanes after chicken position
         for (let i = Config.NUMBER_OF_VISIBLE_LANES/2+1; i < Config.NUMBER_OF_VISIBLE_LANES; i++) {
             this._addRandomLane(
                 -i * Config.TILE_SIZE
@@ -215,6 +224,8 @@ class Lanes {
         let lane;
         switch (number) {
             case 0: // GRASS LANE
+                // generate grass lane with or without trees
+                // (only two grass lanes with trees can be next to each other)
                 if (this._numberOfGrassLanes === Config.MAX_NUMBER_OF_GRASS_LANES_NEXT_TO_EACH_OTHER) {
                     lane = this._emptyGrassLanesObjectPool.get();
                     this._numberOfGrassLanes = 0;
@@ -229,10 +240,7 @@ class Lanes {
                 break;
         }
 
-        // this.mesh.add(lane.mesh);
-        // lane.position = position;
         lane.init(position);
-        
         this._lanes.push(lane);
     }
 }

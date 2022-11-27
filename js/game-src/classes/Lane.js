@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { Object3D } from 'three';
 import Config from '../Config';
 
@@ -8,6 +7,7 @@ class Lane {
      * Creates new lane.
      */
     constructor() {
+        // 3D objects representing ground (middle, left, right)
         this._object = new Object3D();
         this._leftSideObject = new Object3D();
         this._rightSideObject = new Object3D();
@@ -24,6 +24,10 @@ class Lane {
         );
     }
 
+    /**
+     * Position of lane (position on Z axis in Three.js scene).
+     * @type {number}
+     */
     get position() {
         return this._object.position.z;
     }
@@ -47,6 +51,10 @@ class Lane {
     /** Updates lane. */
     update(dt) {}
 
+    /**
+     * Updates instance of instanced mesh.
+     * @param {InstancedMeshesRenderer} instancedMeshesRenderer InstancedMeshesRender that should be used to update instance of instanced mesh.
+     */
     render(instancedMeshesRenderer) {
         this._object.updateMatrix();
         this._leftSideObject.updateMatrix();
@@ -73,16 +81,10 @@ class Lane {
         return false;
     }
 
-    /** init method for object pooling. */
+    /** Initializes lane. */
     init(position) {
-        // this.mesh.visible = true;
         this.position = position;
     }
-
-    // /** reset method for object pooling */
-    // reset() {
-    //     // this.mesh.visible = false;
-    // }
 }
 
 export default Lane;

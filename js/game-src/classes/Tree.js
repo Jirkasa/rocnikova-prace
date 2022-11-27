@@ -5,6 +5,7 @@ import Config from '../Config';
 /** Represents tree. */
 class Tree {
     constructor() {
+        // 3D objects for trunk and leaves of tree
         this._trunkObject = new Object3D();
         this._leavesObject = new Object3D();
 
@@ -12,6 +13,10 @@ class Tree {
         this._leavesObject.position.y = 1.2;
     }
 
+    /**
+     * Position of tree on Z axis in Three.js scene.
+     * @type {number}
+     */
     get verticalPosition() {
         return this._trunkObject.position.z;
     }
@@ -20,17 +25,25 @@ class Tree {
         this._leavesObject.position.z = value;
     }
 
+    /**
+     * Local transform matrix of tree trunk.
+     * @type {Matrix4}
+     */
     get trunkMatrix() {
         this._trunkObject.updateMatrix();
         return this._trunkObject.matrix;
     }
 
+    /**
+     * Local transform matrix of tree leaves.
+     * @type {Matrix4}
+     */
     get leavesMatrix() {
         this._leavesObject.updateMatrix();
         return this._leavesObject.matrix;
     }
 
-    /** Init method for object pooling. */
+    /** Initializes tree. */
     init() {
         // get random scale for leaves of tree
         const scale = (

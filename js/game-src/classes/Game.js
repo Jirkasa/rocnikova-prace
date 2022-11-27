@@ -112,7 +112,7 @@ class Game {
     }
 
     /**
-     * Updates game. This method has to be called multiple times per frame.
+     * Updates game. This method has to be called at least once per frame.
      * @param {number} dt Delta time.
      */
     update(dt) {

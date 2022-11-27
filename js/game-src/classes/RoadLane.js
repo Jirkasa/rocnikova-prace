@@ -7,7 +7,7 @@ import Lane from "./Lane";
  */
 class RoadLane extends Lane {
     /**
-     * 
+     * Creates new road lane.
      * @param {ObjectPool} carsObjectPool Object pool for cars.
      */
     constructor(carsObjectPool) {
@@ -49,7 +49,7 @@ class RoadLane extends Lane {
         return false;
     }
 
-    /** Init method for object pooling. */
+    /** Initializes lane. */
     init(position) {
         super.init(position);
 
@@ -67,18 +67,15 @@ class RoadLane extends Lane {
                 car.rotation = Math.PI;
             }
             this._cars.push(car);
-            // this.mesh.add(car.mesh);
             car.verticalPosition = this._object.position.z;
         }
     }
 
     /** Reset method for object pooling. */
     reset() {
-        // super.reset();
-
+        // delete all cars (return to object pool)
         while (this._cars.length > 0) {
             const car = this._cars.pop();
-            // this.mesh.remove(car.mesh);
             this._carsObjectPool.return(car);
         }
     }

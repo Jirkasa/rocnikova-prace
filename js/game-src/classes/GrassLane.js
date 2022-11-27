@@ -16,7 +16,7 @@ class GrassLane extends Lane {
         this._trees = new Map();
     }
 
-    /** Init method for object pooling. */
+    /** Initializes lane. */
     init(position) {
         super.init(position);
 
@@ -44,8 +44,7 @@ class GrassLane extends Lane {
             tree.init();
             tree.setPosition(treeTilePos);
 
-            // add tree to scene and store
-            // this.mesh.add(tree.mesh);
+            // set position of tree and store it
             this._trees.set(treeTilePos, tree);
             tree.verticalPosition = this._object.position.z;
         }
@@ -68,10 +67,8 @@ class GrassLane extends Lane {
 
     /** Reset method for object pooling. */
     reset() {
-        // super.reset();
         // delete (return) all trees
         for (let [key, tree] of this._trees.entries()) {
-            // this.mesh.remove(tree.mesh);
             this._treesObjectPool.return(tree);
             this._trees.delete(key);
         }

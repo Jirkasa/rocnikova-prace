@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { Object3D } from 'three';
 import Config from '../Config';
 
@@ -8,6 +7,10 @@ class Car {
         this._object = new Object3D();
     }
 
+    /**
+     * Position of car on lane. (On X axis in Three.js scene.)
+     * @type {number}
+     */
     get position() {
         return this._object.position.x;
     }
@@ -15,6 +18,10 @@ class Car {
         this._object.position.x = value;
     }
 
+    /**
+     * Rotation of car around Y axis in Three.js scene.
+     * @type {number}
+     */
     get rotation() {
         return this._object.rotation.y;
     }
@@ -22,6 +29,10 @@ class Car {
         this._object.rotation.y = value;
     }
 
+    /**
+     * Position of car on Z axis in Three.js scene.
+     * @type {number}
+     */
     get verticalPosition() {
         return this._object.position.z;
     }
@@ -29,6 +40,10 @@ class Car {
         this._object.position.z = value;
     }
 
+    /**
+     * Local transform matrix.
+     * @type {Matrix4}
+     */
     get matrix() {
         this._object.updateMatrix();
         return this._object.matrix;
