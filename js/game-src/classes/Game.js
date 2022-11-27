@@ -30,6 +30,8 @@ class Game {
         this._resultWindow.onRestart.subscribe(() => this._onRestart());
         // this._canvasContainer.appendChild(this._startWindow.domElement);
 
+        this._speed = 1;
+
         this._gameStarted = false;
 
         this._world = new World();
@@ -104,6 +106,8 @@ class Game {
 
         this._canvasContainer.removeChild(this._resultWindow.domElement);
 
+        this._speed = 1;
+
         this._gameStarted = true;
     }
 
@@ -116,6 +120,10 @@ class Game {
         }, tooSlow ? 0 : 1000);
 
         this._gameStarted = false;
+    }
+
+    _onNewHighestTile(tileNumber) {
+        this._speed = 1 + Math.max(Math.log(tileNumber * 0.25), 0);
     }
 
     _createSounds() {
@@ -152,8 +160,8 @@ class Game {
 
         // move lanes and chicken (create illusion of moving camera)
         if (this._gameStarted) {
-            this._lanes.move(dt * 0.001);
-            this._chicken.updatePosition(dt * 0.001);
+            this._lanes.move(dt * 0.001 * this._speed);
+            this._chicken.updatePosition(dt * 0.001 * this._speed);
         }
 
         this._lanes.update(dt);
@@ -188,6 +196,7 @@ class Game {
         this._score = new Score("Score", "ScoreValue", this._lanes);
 
         this._chicken.onDead.subscribe((_, tooSlow) => this._onGameOver(tooSlow));
+        this._lanes.onNewHighestYTile.subscribe((_, tileNumber) => this._onNewHighestTile(tileNumber));
 
         this._world.addMesh(this._chicken.mesh);
         this._world.addMesh(this._lanes.mesh);
