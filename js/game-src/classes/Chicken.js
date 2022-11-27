@@ -32,7 +32,7 @@ class Chicken {
         this.deadSound = null;
         /**
          * Move sounds for chicken.
-         * @type {[Audio]}
+         * @type {Array<Audio>}
          */
         this.sounds = null;
         this._currentSoundIdx = 0;

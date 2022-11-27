@@ -3,7 +3,7 @@ class ObjectPool {
     /**
      * Creates new object pool.
      * @param {*} resourceContructor Constructor to be used to create resource.
-     * @param {[]} constructorParams Parameters for contructor.
+     * @param {Array} constructorParams Parameters for contructor.
      */
     constructor(resourceContructor, constructorParams=[]) {
         this._resourceConstructor = resourceContructor;

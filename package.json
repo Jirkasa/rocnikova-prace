@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js --mode production",
     "dev": "webpack serve --config webpack.dev.js --mode development",
-    "generateDocs": "jsdoc ./game-src -r --destination ./docs/game"
+    "generateDocs": "jsdoc ./js/game-src -r --destination ./docs/game"
   },
   "repository": {
     "type": "git",
