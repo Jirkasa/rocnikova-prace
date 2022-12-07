@@ -22,7 +22,9 @@ class Lanes {
          * @type {Group}
          */
         this.mesh = new THREE.Group();
-
+        /**
+         * Event source for event that is emitted when new highest lane was reached.
+         */
         this.onNewHighestYTile = new EventSource();
 
         // used to render lanes (update instanced meshes)
@@ -45,7 +47,12 @@ class Lanes {
         // determines at what lane is player currently located
         this._currentLaneNode = this._getStartLane();
 
+        /**
+         * Number of highest reached lane.
+         * @type {number}
+         */
         this.highestYTile = 0;
+        // number of lane the player is currently located at
         this._currentYTile = 0;
 
         // used to keep track of how many grass lanes there are next to each other
@@ -54,7 +61,11 @@ class Lanes {
         this._numberOfGrassLanes = 0;
     }
 
+    /**
+     * Resets lanes to initial state.
+     */
     reset() {
+        // delete all lanes
         while (this._lanes.length > 0) {
             let lane = this._lanes.shift();
 
@@ -68,10 +79,10 @@ class Lanes {
         }
 
         this._currentXTile = Math.ceil(Config.NUMBER_OF_TILES / 2);
-
         this.highestYTile = 0;
         this._currentYTile = 0;
 
+        // create new lanes
         this._generateLanes();
         this._currentLaneNode = this._getStartLane();
 

@@ -23,11 +23,16 @@ class Chicken {
         this.mesh.material = new THREE.MeshPhongMaterial({
             vertexColors: true
         });
+        /**
+         * Determines whether chicken can move.
+         * @type {boolean}
+         */
         this.canMove = false;
-
+        /**
+         * Event source for event that is emitted when chicken dies.
+         * @type {EventSource}
+         */
         this.onDead = new EventSource();
-
-        this._isDead = false;
 
         /**
          * Dead sound for chicken.
@@ -41,6 +46,7 @@ class Chicken {
         this.sounds = null;
         this._currentSoundIdx = 0;
 
+        this._isDead = false;
         this._lanes = lanes;
 
         // subscribe to events of GameController
@@ -57,6 +63,9 @@ class Chicken {
         this._chickenJumpControl = new ChickenJumpControl(this, Config.CHICKEN_SPEED);
     }
 
+    /**
+     * Resets chicken to start state.
+     */
     reset() {
         this._isDead = false;
         this.mesh.position.set(0, 0, 0);
@@ -84,14 +93,17 @@ class Chicken {
         this._rotationChanger.update(dt);
         this._chickenJumpControl.update(dt);
 
+        // if chicken is colliding with lane, it dies
         if (this._lanes.isColliding(this.mesh.position.x)) {
             if (this.deadSound) this.deadSound.play();
+
             this._isDead = true;
             this.mesh.scale.y = 0.01;
 
             this.onDead.fire(this, false);
         }
 
+        // if chicken was too slow, it dies
         if (this.mesh.position.z > 7) {
             this._isDead = true;
             this.onDead.fire(this, true);
@@ -105,6 +117,7 @@ class Chicken {
         this._rotationChanger.setRotation(-Math.PI/2);
 
         if (!this._lanes.canMoveLeft) return;
+
         this._lanes.moveLeft();
         this._playMoveSound();
 
@@ -119,6 +132,7 @@ class Chicken {
         this._rotationChanger.setRotation(Math.PI/2);
 
         if (!this._lanes.canMoveRight) return;
+
         this._lanes.moveRight();
         this._playMoveSound();
 
@@ -133,6 +147,7 @@ class Chicken {
         this._rotationChanger.setRotation(Math.PI);
 
         if (!this._lanes.canMoveForward) return;
+
         this._lanes.moveForward();
         this._playMoveSound();
 
@@ -147,6 +162,7 @@ class Chicken {
         this._rotationChanger.setRotation(0);
 
         if (!this._lanes.canMoveBack) return;
+        
         this._lanes.moveBack();
         this._playMoveSound();
 

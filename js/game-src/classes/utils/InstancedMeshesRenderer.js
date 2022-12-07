@@ -2,7 +2,15 @@ import * as THREE from 'three';
 import Config from '../../Config';
 import InstancedMeshes from "./InstancedMeshes";
 
+/**
+ * Manages updating of objects rendered as instanced meshes.
+ */
 class InstancedMeshesRenderer {
+    /**
+     * 
+     * @param {Assets} assets Loaded assets.
+     * @param {Object3D|Scene} meshesContainer Object (or scene) into which should be added created instanced meshes.
+     */
     constructor(assets, meshesContainer) {
         // geometries
         const groundGeometry = new THREE.PlaneGeometry(Config.NUMBER_OF_TILES * Config.TILE_SIZE, Config.TILE_SIZE);
@@ -43,6 +51,9 @@ class InstancedMeshesRenderer {
         this._carInstancedMeshes = new InstancedMeshes(carGeometry, carMaterial, 100, meshesContainer);
     }
 
+    /**
+     * Begins to update instanced meshes.
+     */
     begin() {
         this._grassInstancedMeshes.begin();
         this._grassSideInstancedMeshes.begin();
@@ -53,27 +64,49 @@ class InstancedMeshesRenderer {
         this._carInstancedMeshes.begin();
     }
 
+    /**
+     * Sets grass lane.
+     * @param {Matrix4} matrix Matrix4 representing local transformation of grass lane.
+     * @param {Matrix4} leftSideMatrix Matrix4 representing local transformation of left side of grass lane.
+     * @param {Matrix4} rightSideMatrix Matrix4 representing local transformation of right side of grass lane.
+     */
     setGrass(matrix, leftSideMatrix, rightSideMatrix) {
         this._grassInstancedMeshes.set(matrix);
         this._grassSideInstancedMeshes.set(leftSideMatrix);
         this._grassSideInstancedMeshes.set(rightSideMatrix);
     }
 
+    /**
+     * Sets road lane.
+     * @param {Matrix4} matrix Matrix4 representing local transformation of road lane.
+     * @param {Matrix4} leftSideMatrix Matrix4 representing local transformation of left side of road lane.
+     * @param {Matrix4} rightSideMatrix Matrix4 representing local transformation of right side of road lane.
+     */
     setRoad(matrix, leftSideMatrix, rightSideMatrix) {
         this._roadInstancedMeshes.set(matrix);
         this._roadSideInstancedMeshes.set(leftSideMatrix);
         this._roadSideInstancedMeshes.set(rightSideMatrix);
     }
 
+    /**
+     * Sets tree.
+     * @param {Matrix4} trunkMatrix Matrix4 representing local transformation of tree trunk.
+     * @param {Matrix4} leavesMatrix Matrix4 representing local transformation of tree leaves.
+     */
     setTree(trunkMatrix, leavesMatrix) {
         this._treeTrunkInstancedMeshes.set(trunkMatrix);
         this._treeLeavesInstancedMeshes.set(leavesMatrix);
     }
 
+    /**
+     * Sets car.
+     * @param {Matrix4} matrix Matrix4 representing local transformation of car.
+     */
     setCar(matrix) {
         this._carInstancedMeshes.set(matrix);
     }
 
+    // Finishes updating of instanced meshes.
     finish() {
         this._grassInstancedMeshes.finish();
         this._grassSideInstancedMeshes.finish();

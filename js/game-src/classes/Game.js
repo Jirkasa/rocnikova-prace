@@ -21,15 +21,18 @@ class Game {
         this._renderer = new THREE.WebGLRenderer({
             canvas: document.getElementById(canvasId)
         });
+        
         this._canvasContainer = document.getElementById(canvasContainerId);
         this._loadIcon = document.getElementById("GameLoadIcon");
 
+        // windows
         this._startWindow = new StartWindow("Start");
         this._startWindow.onStart.subscribe(() => this._onStart());
         this._resultWindow = new ResultWindow("Výsledky", "ScoreValue");
         this._resultWindow.onRestart.subscribe(() => this._onRestart());
-        // this._canvasContainer.appendChild(this._startWindow.domElement);
 
+        // current speed of game
+        // (the further the player goes, the faster game is)
         this._speed = 1;
 
         this._gameStarted = false;
@@ -89,14 +92,19 @@ class Game {
         this._assets.onLoad.subscribe(() => this._onAssetsLoaded());
     }
 
+    // called when player starts game
     _onStart() {
         this._createSounds();
         this._chicken.canMove = true;
-        this._canvasContainer.removeChild(this._startWindow.domElement);
-        this._gameStarted = true;
         this._score.visible = true;
+
+        // remove start window
+        this._canvasContainer.removeChild(this._startWindow.domElement);
+
+        this._gameStarted = true;
     }
 
+    // called when player restarts game
     _onRestart() {
         this._lanes.reset();
         this._chicken.reset();
@@ -111,10 +119,15 @@ class Game {
         this._gameStarted = true;
     }
 
+    // called when game is over (chicken dies)
+    // - as parameter is passed whether player was too slow and because of that died
     _onGameOver(tooSlow) {
         this._score.visible = false;
 
         this._resultWindow.setScore(this._score.value);
+
+        // if player was too slow, result window is displayed
+        // right away, otherwise, there is a small delay
         setTimeout(() => {
             this._canvasContainer.appendChild(this._resultWindow.domElement);
         }, tooSlow ? 0 : 1000);
@@ -122,20 +135,25 @@ class Game {
         this._gameStarted = false;
     }
 
+    // called when player reached new highest plane
     _onNewHighestTile(tileNumber) {
         this._speed = 1 + Math.max(Math.log(tileNumber * 0.25), 0);
     }
 
+    // creates sounds for game
     _createSounds() {
+        // create and play sound for cars
         const sound = new THREE.Audio(this._chickenCamera.audioListener);
         sound.setBuffer(this._assets.getAsset("Cars Sound"));
         sound.setLoop(true);
         sound.play();
 
+        // create and set dead sound for chicken
         const deadSound = new THREE.Audio(this._chickenCamera.audioListener);
         deadSound.setBuffer(this._assets.getAsset("Deads Sound"));
         this._chicken.deadSound = deadSound;
 
+        // create and set sounds for chicken
         const chickenSound1 = new THREE.Audio(this._chickenCamera.audioListener);
         chickenSound1.setVolume(0.3);
         const chickenSound2 = new THREE.Audio(this._chickenCamera.audioListener);

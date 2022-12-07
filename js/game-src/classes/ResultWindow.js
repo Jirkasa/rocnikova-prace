@@ -2,13 +2,26 @@ import Button from "./Button";
 import PopupWindow from "./PopupWindow";
 import EventSource from "./utils/EventSource";
 
+/**
+ * Represents result window.
+ * @extends PopupWindow
+ */
 class ResultWindow extends PopupWindow {
-    constructor(heading, scoreValueElement) {
+    /**
+     * Creates new result window.
+     * @param {string} heading Heading of popup window.
+     * @param {string} scoreValueElementId ID attribute of element that contains high score.
+     */
+    constructor(heading, scoreValueElementId) {
         super(heading);
 
+        /**
+         * Event source for event that is emitted when restart button is clicked.
+         * @type {EventSource}
+         */
         this.onRestart = new EventSource();
 
-        this._highScore = +document.getElementById(scoreValueElement).innerText;
+        this._highScore = +document.getElementById(scoreValueElementId).innerText;
 
         this._scoreValueElement = null;
         this._highScoreValueElement = null;
@@ -19,6 +32,10 @@ class ResultWindow extends PopupWindow {
         this._restartButton.onClick.subscribe(() => this.onRestart.fire(this));
     }
 
+    /**
+     * Sets score to be displayed in result window.
+     * @param {string} score Score to be displayed in result window.
+     */
     setScore(score) {
         this._scoreValueElement.innerText = score;
 
@@ -26,22 +43,7 @@ class ResultWindow extends PopupWindow {
             this._highScore = score;
             this._highScoreValueElement.innerText = this._highScore;
 
-            // fetch("./hra/save", {
-            //     method: "POST",
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         'score': this._highScore
-            //     })
-            // })
-            // .then(data => {
-            //     console.log(data);
-            // })
-            // .catch(err => {
-            //     console.log(err);
-            // });
-
+            // send request to update high score of logged in player
             const xmlhttp = new XMLHttpRequest();
             xmlhttp.open("POST", "./hra/save", true);
             xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -49,6 +51,7 @@ class ResultWindow extends PopupWindow {
         }
     }
 
+    // creates content elements of window
     _createContentElements() {
         const scoreElement = document.createElement("div");
         scoreElement.classList.add("score-text", "u-mb-4");

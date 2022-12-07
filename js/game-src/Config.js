@@ -13,6 +13,7 @@ import * as THREE from 'three';
  * @prop {number} CHICKEN_HIT_SIZE Hit space size for chicken.
  * @prop {number} CAMERA_DAMPING Damping for camera movement.
  * @prop {number} MAX_NUMBER_OF_TREES_PER_LANE Maximum number of trees per lane.
+ * @prop {number} TREE_MAX_LEAVES_HEIGHT Max height of leaves for trees.
  * @prop {number} CAR_DRIVE_SPACE_SIZE Size of space where cars are moving.
  * @prop {number} CAR_SIZE Size (length) of a car.
  * @prop {number} CAR_FRONT_FROM_ORIGIN Distance to front of car from origin of car.
