@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=2.2, minimum-scale=1.0">
 
+    <meta name="author" content="Jiří Satora">
+    <meta name="description" content="Jednoduchá hra, ve které hraješ za kuře a snažíš se přecházením přes silnice dostat co nejdál.">
+
     <link rel="icon" type="image/svg+xml" href="<?php echo URLROOT; ?>/img/logo.svg"/>
 
     <link rel="stylesheet" href="<?php echo ASSETSROOT; ?>/css/style.css">
