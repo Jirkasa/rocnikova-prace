@@ -26,6 +26,27 @@
             return $user;
         }
 
+        public function getLeaderboardPage($page, $itemsPerPage) {
+            $skip = ($page - 1) * $itemsPerPage;
+
+            $this->db->query('SELECT * FROM KNS_users WHERE high_score IS NOT NULL ORDER BY high_score DESC LIMIT :skip, :limit;');
+
+            $this->db->bind(":skip", $skip);
+            $this->db->bind(":limit", $itemsPerPage);
+
+            $users = $this->db->resultSet();
+
+            return $users;
+        }
+
+        public function countParticipatingUsers() {
+            $this->db->query('SELECT COUNT(*) AS count FROM KNS_users WHERE high_score IS NOT NULL;');
+
+            $result = $this->db->single();
+
+            return $result->count;
+        }
+
         public function saveHighScore($userId, $score) {
             $this->db->query('UPDATE KNS_users SET high_score = :score WHERE id = :id AND (:score > high_score OR high_score IS NULL)');
             $this->db->bind(':score', $score);

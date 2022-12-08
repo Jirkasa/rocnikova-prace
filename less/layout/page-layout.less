@@ -1,0 +1,44 @@
+.page-layout {
+    min-height: ~"calc(100vh - @{header-height})";
+    display: flex;
+    flex-direction: column;
+
+    &__container {
+        #display-12-grid();
+        flex-grow: 2;
+        align-self: center;
+
+        width: 100%;
+        max-width: @grid-width;
+        margin: 0 auto;
+
+        margin: 0 3.2rem;
+        padding: 3.2rem 0;
+
+        position: relative;
+
+        // side illustration patterns
+        &::before, &::after {
+            content: "";
+
+            position: absolute;
+            width: 6.4rem;
+            height: 100%;
+
+            background-image: url("../../css-images/Pattern.svg");
+            background-repeat: repeat-y;
+
+            top: 0;
+        }
+        &::before {
+            left: 0;
+        }
+        &::after {
+            right: 0;
+        }
+    }
+
+    &__content {
+        grid-column: 2 / span 10;
+    }
+}

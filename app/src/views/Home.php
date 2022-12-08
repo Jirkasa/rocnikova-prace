@@ -109,7 +109,7 @@
                 </div>
             </div>
             <div class="u-center-text">
-                <a href="#" class="button-primary">
+                <a href="<?php echo URLROOT; ?>/zebricek" class="button-primary">
                     <svg>
                         <use xlink:href="./static/icon-sprite.svg#leaderboard"></use>
                     </svg>

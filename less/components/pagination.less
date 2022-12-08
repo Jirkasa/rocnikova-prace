@@ -1,0 +1,63 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+
+    gap: .8rem;
+
+    &__button {
+        &, &:link, &:visited {
+            padding: 1.2rem;
+            min-width: 4.4rem;
+
+            font-family: inherit;
+            font-size: 2rem;
+            line-height: 1;
+
+            color: @colors[secondary];
+
+            text-align: center;
+            text-decoration: none;
+
+            border: .2rem solid @colors[secondary];
+        }
+
+        &--active, &--active:link, &--active:visited, &:hover {
+            background-color: @colors[secondary];
+            color: @colors[white];
+        }
+        
+        &:disabled {
+            background-color: transparent;
+            color: @colors[secondary];
+        }
+
+        &--move {
+            &, &:link, &:visited {
+                padding: .6rem;
+
+                background-color: @colors[secondary-2];
+                border-color: @colors[secondary-2];
+            }
+
+            &:hover {
+                background-color: darken(@colors[secondary-2], 5%);
+            }
+
+            &:disabled {
+                background-color: @colors[grey-40];
+                border-color: @colors[grey-40];
+            }
+        }
+    }
+
+    &__button-icon {
+        width: 3.2rem;
+        height: 3.2rem;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            fill: @colors[white];
+        }
+    }
+}
