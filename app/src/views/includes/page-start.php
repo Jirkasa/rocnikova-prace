@@ -8,7 +8,7 @@
     <meta name="author" content="Jiří Satora">
     <meta name="description" content="Jednoduchá hra, ve které hraješ za kuře a snažíš se přecházením přes silnice dostat co nejdál.">
 
-    <link rel="icon" type="image/svg+xml" href="<?php echo URLROOT; ?>/img/logo.svg"/>
+    <link rel="icon" type="image/svg+xml" href="<?php echo URLROOT; ?>/favicon.svg"/>
 
     <link rel="stylesheet" href="<?php echo ASSETSROOT; ?>/css/style.css">
 
