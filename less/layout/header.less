@@ -1,16 +1,26 @@
 .header {
     background-color: @colors[primary-dark];
     height: @header-height;
+    width: 100%;
+    max-width: @max-page-width;
 
     padding: 0 3.2rem;
 
     position: relative;
+    z-index: 40;
 
     user-select: none;
 
     #respond-phone({
         padding: 0 2.4rem;
     });
+
+    &--fixed {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 
     &__content {
         height: 100%;
@@ -125,4 +135,8 @@
             text-decoration: underline;
         }
     }
+}
+
+.header-container {
+    height: @header-height;
 }

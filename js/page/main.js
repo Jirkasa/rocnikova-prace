@@ -1,3 +1,7 @@
+import makeStickyHeader from "./stickyHeader.js";
+
+// NAVIGATION
+// ----------
 const navigation = document.getElementById("HeaderNavigation");
 const button = document.getElementById("HeaderNavigationToggleButton");
 const links = navigation.querySelectorAll("a");
@@ -33,3 +37,10 @@ button.addEventListener("click", () => {
     }
     updateTabIndices();
 });
+
+// STICKY HEADER
+// -------------
+const headerContainer = document.getElementById("HeaderContainer");
+const header = document.getElementById("Header");
+
+makeStickyHeader(headerContainer, header, "header--fixed");
