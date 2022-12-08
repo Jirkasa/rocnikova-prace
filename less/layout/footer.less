@@ -14,9 +14,15 @@
             color: @colors[primary];
 
             text-decoration: none;
+
+            outline-color: @colors[primary];
         }
 
-        &:hover {
+        &:focus-visible {
+            outline-style: solid;
+        }
+
+        &:hover, &:focus-visible {
             text-decoration: underline;
         }
     }

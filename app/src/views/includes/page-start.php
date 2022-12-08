@@ -27,6 +27,10 @@
                     <img src="./img/Logo.svg" alt="Logo" class="header__logo">
                     <span class="header__title"><?php echo SITENAME; ?></span>
                 </a>
+                <button id="HeaderNavigationToggleButton" class="toggle-button">
+                    navigace
+                    <span class="toggle-button__icon"></span>
+                </button>
                 <nav id="HeaderNavigation" class="header__navigation">
                     <ul>
                         <li><a href="<?php echo URLROOT; ?>/hra" class="header__navigation-item">Hrát</a></li>
@@ -47,9 +51,5 @@
                         <?php } ?>
                     </ul>
                 </nav>
-                <button id="HeaderNavigationToggleButton" class="toggle-button">
-                    navigace
-                    <span class="toggle-button__icon"></span>
-                </button>
             </div>
         </header>

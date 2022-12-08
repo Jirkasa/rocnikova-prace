@@ -25,7 +25,12 @@
         user-select: none;
     }
 
-    &:hover {
+    &:focus-visible {
+        outline: .4rem solid @colors[secondary-dark];
+        outline-offset: 0;
+    }
+
+    &:hover, &:focus-visible {
         background-color: darken(@colors[secondary], 9%);
     }
 

@@ -5,9 +5,11 @@
         text-decoration: underline;
 
         transition: all .1s;
+
+        outline-color: @colors[secondary-dark];
     }
 
-    &:hover {
+    &:hover, &:focus-visible {
         color: @colors[grey-80];
         background-color: @colors[secondary];
     }

@@ -138,6 +138,11 @@
 
         grid-column: span 4;
 
+        &:focus-visible {
+            outline: .4rem solid @colors[secondary-dark];
+            outline-offset: 0;
+        }
+
         #respond-tab-port({
             grid-column: span 12;
         });

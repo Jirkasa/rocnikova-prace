@@ -33,6 +33,10 @@
             align-items: center;
             gap: 1.2rem;
         }
+
+        &:focus-visible {
+            outline: .2rem solid @colors[white];
+        }
     }
 
     &__logo {
@@ -111,6 +115,10 @@
             text-transform: uppercase;
 
             color: @colors[white];
+        }
+
+        &:focus-visible {
+            outline: .2rem solid @colors[white];
         }
 
         &:hover {
