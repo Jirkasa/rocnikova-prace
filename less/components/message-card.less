@@ -7,6 +7,13 @@
 
     position: relative;
 
+    #respond-tab-port({
+        grid-column: 1 / span 12;
+    });
+    @media (max-width: #pxToEm(700)[]) {
+        padding: 3.2rem;
+    }
+
     hr {
         max-width: 16rem;
         height: .4rem;
@@ -33,6 +40,10 @@
 
         background-image: url("../../css-images/Pattern.svg");
         background-repeat: repeat-y;
+
+        @media (max-width: #pxToEm(700)[]) {
+            display: none;
+        }
     }
     &::before {
         left: 3.2rem;

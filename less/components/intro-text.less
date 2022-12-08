@@ -5,5 +5,12 @@
 
     p {
         grid-column: 3 / span 8;
+
+        #respond-tab-port({
+            grid-column: 2 / span 10;
+        });
+        @media (max-width: #pxToEm(700)[]) {
+            grid-column: span 12;
+        }
     }
 }

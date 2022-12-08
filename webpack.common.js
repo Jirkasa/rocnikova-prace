@@ -14,6 +14,10 @@ module.exports = {
         home: {
             import: "./js/home/main.js",
             filename: "js/home.js"
+        },
+        page: {
+            import: "./js/page/main.js",
+            filename: "js/page.js"
         }
     },
     output: {

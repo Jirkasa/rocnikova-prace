@@ -3,19 +3,29 @@
     display: flex;
     flex-direction: column;
 
+    @media (min-width: @page-margin-breakpoint) {
+        min-height: ~"calc(100vh - @{header-height} - 6.4rem)";
+    }
+
     &__container {
-        #display-12-grid();
+        display: grid;
+        grid-template-columns: @grid-column-width repeat(10, minmax(0, 1fr)) @grid-column-width;
+        gap: @grid-gutter;
+
         flex-grow: 2;
         align-self: center;
 
         width: 100%;
-        max-width: @grid-width;
+        max-width: @grid-width + 6.4rem;
         margin: 0 auto;
 
-        margin: 0 3.2rem;
-        padding: 3.2rem 0;
+        padding: 3.2rem;
 
         position: relative;
+
+        #respond-phone({
+            gap: 0;
+        });
 
         // side illustration patterns
         &::before, &::after {
@@ -29,16 +39,24 @@
             background-repeat: repeat-y;
 
             top: 0;
+
+            #respond-tab-port({
+                display: none;
+            });
         }
         &::before {
-            left: 0;
+            left: 3.2rem;
         }
         &::after {
-            right: 0;
+            right: 3.2rem;
         }
     }
 
     &__content {
         grid-column: 2 / span 10;
+
+        #respond-tab-port({
+            grid-column: 1 / span 12;
+        });
     }
 }

@@ -7,6 +7,10 @@
 
     background-color: @colors[grey-20];
 
+    @media (min-width: @page-margin-breakpoint) {
+        height: ~"calc(100vh - @{header-height} - 6.4rem)";
+    }
+
     &__canvas {
         position: absolute;
         top: 0;

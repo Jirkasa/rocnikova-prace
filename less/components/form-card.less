@@ -6,8 +6,22 @@
 
     display: flex;
 
+    #respond-tab-port({
+        grid-column: 1 / span 12;
+    });
+    #respond-phone({
+        min-height: 0;
+    });
+
     &__image {
         flex: 0 0 55%;
+
+        @media (max-width: #pxToEm(750)[]) {
+            flex-basis: 50%;
+        }
+        #respond-phone({
+            display: none;
+        });
 
         img {
             object-fit: cover;
@@ -20,6 +34,13 @@
         flex: 0 0 45%;
 
         padding: 3.2rem;
+
+        @media (max-width: #pxToEm(750)[]) {
+            flex-basis: 50%;
+        }
+        #respond-phone({
+            flex-basis: 100%;
+        });
 
         hr {
             max-width: 12.8rem;

@@ -8,10 +8,16 @@
 
     border-right: 2.4rem solid @colors[secondary];
 
-    // padding: 3.2rem 0 3.2rem 12.8rem;
     padding-left: 12.8rem;
 
     position: relative;
+
+    #respond-tab-port({
+        grid-column: 1 / span 12;
+    });
+    @media (max-width: #pxToEm(700)[]) {
+        padding-left: 3.2rem;
+    }
 
     &::before {
         content: "";
@@ -25,11 +31,19 @@
 
         background-image: url("../../css-images/Pattern.svg");
         background-repeat: repeat-y;
+
+        @media (max-width: #pxToEm(700)[]) {
+            display: none;
+        }
     }
 
     &__image {
         margin: 3.2rem 0;
         height: 30.8rem;
+
+        @media (max-width: #pxToEm(550)[]) {
+            display: none;
+        }
     }
 
     &__content {
@@ -37,5 +51,9 @@
         background-image: url("../../css-images/profile-background-pattern.svg");
 
         padding: 3.2rem 3.2rem 0 0;
+
+        @media (max-width: #pxToEm(550)[]) {
+            padding-bottom: 3.2rem;
+        }
     }
 }

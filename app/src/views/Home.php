@@ -16,12 +16,18 @@
                             </svg>
                             <span>Spustit hru</span>
                         </a>
-                        <a href="<?php echo URLROOT; ?>/registrace" class="button-primary button-primary--outlined">
-                            <svg>
-                                <use xlink:href="./static/icon-sprite.svg#person-add"></use>
-                            </svg>
-                            <span>Vytvořit účet</span>
-                        </a>
+                        <?php
+                            if (!isLoggedIn()) {
+                        ?>
+                            <a href="<?php echo URLROOT; ?>/registrace" class="button-primary button-primary--outlined">
+                                <svg>
+                                    <use xlink:href="./static/icon-sprite.svg#person-add"></use>
+                                </svg>
+                                <span>Vytvořit účet</span>
+                            </a>
+                        <?php
+                            }
+                        ?>
                     </div>
                 </div>
             </div>
