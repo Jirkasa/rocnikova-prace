@@ -31,91 +31,73 @@
         <div class="section__content">
             <h2 class="heading-secondary u-center-text u-mb-4">Nejlepší hráči</h2>
             <hr class="horizontal-rule u-mb-4">
-            <div class="intro-text u-mb-6">
-                <p class="paragraph">Pokud si vytvoříš účet, tvé nejlepší skóre se bude ukládat do globálního žebříčku a můžeš tak porovnat, jak jsi na tom v porovnání s ostatními hráči.</p>
+            <div class="intro-text <?php echo count($data['leaderboardUsers']) > 0 ? "u-mb-6" : "u-mb-4" ?>">
+                <?php
+                    if (isLoggedIn()) {
+                ?>
+                    <p class="paragraph">Zde se nachází žebříček nejlepších hráčů. Můžeš s jeho pomocí porovnat, jak jsi na tom v porovnání s ostatními hráči.</p>
+                <?php
+                    } else {
+                ?>
+                    <p class="paragraph">Pokud si vytvoříš účet, tvé nejlepší skóre se bude ukládat do globálního žebříčku a můžeš tak porovnat, jak jsi na tom v porovnání s ostatními hráči.</p>
+                <?php
+                    }
+                ?>
             </div>
-            <div class="home-leaderboard-container u-mb-4">
-                <div class="leaderboard">
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place leaderboard-item__place--first">1.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Darcie</p>
-                            <p class="leaderboard-item__score">352</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place leaderboard-item__place--secondary">2.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Molly</p>
-                            <p class="leaderboard-item__score">348</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place leaderboard-item__place--third">3.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Kye</p>
-                            <p class="leaderboard-item__score">345</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place">4.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Evelyn</p>
-                            <p class="leaderboard-item__score">312</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place">5.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Tina</p>
-                            <p class="leaderboard-item__score">289</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place">6.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Christina</p>
-                            <p class="leaderboard-item__score">270</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place">7.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Evie</p>
-                            <p class="leaderboard-item__score">253</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place">8.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Penelope</p>
-                            <p class="leaderboard-item__score">210</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place">9.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Salma</p>
-                            <p class="leaderboard-item__score">185</p>
-                        </div>
-                    </div>
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-item__place">10.</div>
-                        <div class="leaderboard-item__content">
-                            <p class="leaderboard-item__username">Emmie</p>
-                            <p class="leaderboard-item__score">176</p>
-                        </div>
+            <?php
+                if (count($data['leaderboardUsers']) > 0) {
+            ?>
+                <div class="home-leaderboard-container u-mb-4">
+                    <div class="leaderboard">
+                        <?php
+                            foreach ($data['leaderboardUsers'] as $idx => &$user) {
+                            $place = $idx+1;
+                            $modifierClass = "";
+                            switch ($place) {
+                                case 1:
+                                    $modifierClass = " leaderboard-item__place--first";
+                                    break;
+                                case 2:
+                                    $modifierClass = " leaderboard-item__place--second";
+                                    break;
+                                case 3:
+                                    $modifierClass = " leaderboard-item__place--third";
+                                    break;
+                            }
+                        ?>
+                            <div class="leaderboard-item">
+                                <div class="leaderboard-item__place<?php echo $modifierClass; ?>"><?php echo $place; ?></div>
+                                <div class="leaderboard-item__content">
+                                    <p class="leaderboard-item__username"><?php echo $user->username; ?></p>
+                                    <p class="leaderboard-item__score"><?php echo $user->high_score; ?></p>
+                                </div>
+                            </div>
+                        <?php
+                            }
+                        ?>
                     </div>
                 </div>
-            </div>
-            <div class="u-center-text">
-                <a href="<?php echo URLROOT; ?>/zebricek" class="button-primary">
+                <div class="u-center-text">
+                    <a href="<?php echo URLROOT; ?>/zebricek" class="button-primary">
+                        <svg>
+                            <use xlink:href="./static/icon-sprite.svg#leaderboard"></use>
+                        </svg>
+                        <span>Zobrazit celý žebříček</span>
+                    </a>
+                </div>
+            <?php
+                } else {
+            ?>
+                <hr class="horizontal-rule u-mb-4">
+                <div class="icon u-mb-4">
                     <svg>
                         <use xlink:href="./static/icon-sprite.svg#leaderboard"></use>
                     </svg>
-                    <span>Zobrazit celý žebříček</span>
-                </a>
-            </div>
+                </div>
+                <p class="paragraph u-center-text">Zatím si nikdo ze zaregistrovaných uživatelů nezahrál. Buď první!</p>
+            <?php
+                }
+            ?>
         </div>
     </section>
     <section class="home-gallery-section">

@@ -97,6 +97,7 @@ class Game {
         this._createSounds();
         this._chicken.canMove = true;
         this._score.visible = true;
+        this._score.reset();
 
         // remove start window
         this._canvasContainer.removeChild(this._startWindow.domElement);

@@ -5,7 +5,7 @@
 
             $rowCount = $this->userModel->countParticipatingUsers();
             $itemsPerPage = 10;
-            $pageCount = ceil($rowCount/$itemsPerPage);
+            $pageCount = (int)ceil($rowCount/$itemsPerPage);
 
             $page = 1;
             if (isset($_GET['page'])) {
@@ -18,7 +18,7 @@
             if ($page < 1) {
                 $page = 1;
             } else if ($page > $pageCount) {
-                $page = (int)$pageCount;
+                $page = $pageCount;
             }
 
             $users = [];
